@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peringatan Nuzulul Qur'an 1447 H – Mushola Sholihin Siluang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loading">
+    <div class="loading-lantern">🏮</div>
+    <div class="loading-text">Memuat Undangan...</div>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+
+  <!-- ===== WELCOME POPUP ===== -->
+  <div id="popup-overlay">
+    <div class="popup-card">
+      <div class="popup-icon">🌙</div>
+      <div class="popup-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <div class="popup-title">Selamat Datang di Undangan Digital</div>
+      <div class="popup-desc">Pemuda Mushola Sholihin Siluang mengundang Anda dalam rangka memperingati Nuzulul Qur'an 1447 H. Semoga kita semua mendapat keberkahan Ramadhan. 🌟</div>
+      <button class="popup-btn ripple-container" onclick="closePopup()">Masuk ke Undangan →</button>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toast-container"></div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">🕌</div>
+        <div>
+          <div class="nav-logo-text">Mushola Sholihin</div>
+          <div class="nav-logo-sub">Siluang</div>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#tentang">Tentang</a></li>
+        <li><a href="#lomba">Lomba</a></li>
+        <li><a href="#rundown">Rundown</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#lokasi">Lokasi</a></li>
+      </ul>
+      <a href="#pendaftaran" class="nav-cta">Daftar Sekarang</a>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul>
+      <li><a href="#tentang" onclick="toggleMenu()">📖 Tentang Acara</a></li>
+      <li><a href="#lomba" onclick="toggleMenu()">🏆 Detail Lomba</a></li>
+      <li><a href="#pendaftaran" onclick="toggleMenu()">📝 Pendaftaran</a></li>
+      <li><a href="#rundown" onclick="toggleMenu()">🕐 Rundown</a></li>
+      <li><a href="#faq" onclick="toggleMenu()">❓ FAQ</a></li>
+      <li><a href="#lokasi" onclick="toggleMenu()">📍 Lokasi</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <!-- Stars -->
+    <div class="hero-stars" id="hero-stars"></div>
+    <div class="hero-deco top-left">☪</div>
+    <div class="hero-deco bot-right">☪</div>
+    <div class="hero-content">
+      <div class="hero-badge">🌙 Ramadhan 1447 H</div>
+      <div class="hero-arabic">إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ</div>
+      <h1 class="hero-title">Peringatan Nuzulul Qur'an</h1>
+      <p class="hero-sub">Pemuda Mushola Sholihin Siluang</p>
+      <div class="hero-date">Sabtu, 14 Maret 2026 <span>•</span> Mushola Sholihin Siluang</div>
+      <div class="hero-buttons">
+        <a href="#pendaftaran" class="btn-primary ripple-container">🏆 Daftar Lomba</a>
+        <a href="#tentang" class="btn-secondary">Selengkapnya →</a>
+      </div>
+      <div class="hero-icons">
+        <div class="hero-icon-item"><div class="icon">🎨</div><p>Kaligrafi</p></div>
+        <div class="hero-icon-item"><div class="icon">🧠</div><p>Cerdas Cermat</p></div>
+        <div class="hero-icon-item"><div class="icon">🏅</div><p>Hadiah Menarik</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COUNTDOWN ===== -->
+  <section id="countdown">
+    <div class="section-inner">
+      <div class="section-tag reveal">⏳ Hitung Mundur</div>
+      <h2 class="section-title reveal">Menuju Acara <span>14 Maret 2026</span></h2>
+      <div class="countdown-grid">
+        <div class="cd-box reveal reveal-delay-1"><div class="cd-num" id="cd-hari">00</div><div class="cd-label">Hari</div></div>
+        <div class="cd-box reveal reveal-delay-2"><div class="cd-num" id="cd-jam">00</div><div class="cd-label">Jam</div></div>
+        <div class="cd-box reveal reveal-delay-3"><div class="cd-num" id="cd-menit">00</div><div class="cd-label">Menit</div></div>
+        <div class="cd-box reveal reveal-delay-4"><div class="cd-num" id="cd-detik">00</div><div class="cd-label">Detik</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TENTANG ===== -->
+  <section id="tentang">
+    <div class="section-inner">
+      <div class="section-tag reveal">📖 Tentang Acara</div>
+      <h2 class="section-title reveal">Makna <span>Nuzulul Qur'an</span></h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="intro reveal">Nuzulul Qur'an adalah momen bersejarah saat Al-Qur'an pertama kali diturunkan kepada Nabi Muhammad ﷺ. Peristiwa agung ini menjadi pondasi spiritual umat Islam di seluruh dunia, khususnya di bulan Ramadhan yang penuh berkah.</p>
+          <p class="intro reveal">Pemuda Mushola Sholihin Siluang mengajak seluruh generasi muda untuk merayakan momen ini dengan kegiatan positif, edukatif, dan penuh inspirasi. Mari jadikan Ramadhan kali ini lebih bermakna!</p>
+          <div class="about-cards">
+            <div class="about-card reveal reveal-delay-1">
+              <div class="about-card-icon">🌟</div>
+              <div><h4>Momen Bersejarah</h4><p>Peringatan turunnya wahyu pertama kepada Nabi ﷺ sebagai pedoman hidup umat manusia.</p></div>
+            </div>
+            <div class="about-card reveal reveal-delay-2">
+              <div class="about-card-icon">🕊️</div>
+              <div><h4>Pemuda Berakhlaq</h4><p>Mendorong generasi muda untuk mencintai Al-Qur'an dan mengamalkan nilai-nilainya.</p></div>
+            </div>
+            <div class="about-card reveal reveal-delay-3">
+              <div class="about-card-icon">🤝</div>
+              <div><h4>Ukhuwah Islamiyah</h4><p>Mempererat tali persaudaraan antar pemuda muslim di lingkungan Siluang.</p></div>
+            </div>
+            <div class="about-card reveal reveal-delay-4">
+              <div class="about-card-icon">🎯</div>
+              <div><h4>Kreativitas Islami</h4><p>Menyalurkan bakat seni dan intelektual pemuda dalam nuansa islami yang positif.</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="about-quote reveal">
+            <div class="arabic">شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ هُدًى لِّلنَّاسِ</div>
+            <div class="trans">"Bulan Ramadhan adalah bulan yang di dalamnya diturunkan Al-Qur'an sebagai petunjuk bagi manusia." — QS. Al-Baqarah: 185</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOMBA ===== -->
+  <section id="lomba">
+    <div class="section-inner">
+      <div class="section-tag reveal">🏆 Kegiatan Lomba</div>
+      <h2 class="section-title reveal">Detail <span>Perlombaan</span></h2>
+      <div class="lomba-grid">
+        <!-- Kaligrafi -->
+        <div class="lomba-card reveal">
+          <div class="lomba-card-header gold-accent">
+            <div class="lomba-icon">🎨</div>
+            <div>
+              <h3>Lomba Kaligrafi</h3>
+              <span class="lomba-badge badge-gold">Tingkat Umum</span>
+            </div>
+          </div>
+          <div class="lomba-card-body">
+            <ul class="lomba-info-list">
+              <li><strong>Peserta:</strong> Terbuka untuk semua usia (umum)</li>
+              <li><strong>Tema:</strong> Ayat-ayat pilihan seputar Al-Qur'an & Ramadhan</li>
+              <li><strong>Media:</strong> Kanvas / kertas ukuran A3 (disediakan panitia)</li>
+              <li><strong>Waktu pengerjaan:</strong> 90 menit di tempat</li>
+              <li><strong>Penilaian:</strong> Keindahan, kerapian, kreativitas warna & komposisi</li>
+            </ul>
+            <div class="lomba-divider"></div>
+            <div class="lomba-benefit">🎁 Hadiah: Juara 1, 2, 3 + Piala + Sertifikat</div>
+            <button class="btn-daftar btn-daftar-gold ripple-container" onclick="showForm('kaligrafi')">
+              🖊️ Daftar Kaligrafi
+            </button>
+          </div>
+        </div>
+        <!-- Cerdas Cermat -->
+        <div class="lomba-card reveal reveal-delay-2">
+          <div class="lomba-card-header green-accent">
+            <div class="lomba-icon">🧠</div>
+            <div>
+              <h3>Cerdas Cermat</h3>
+              <span class="lomba-badge badge-green">SMA ke Bawah</span>
+            </div>
+          </div>
+          <div class="lomba-card-body">
+            <ul class="lomba-info-list">
+              <li><strong>Peserta:</strong> Pelajar SD, SMP, SMA / sederajat</li>
+              <li><strong>Materi:</strong> Al-Qur'an, Hadits, Fiqh, Sejarah Islam</li>
+              <li><strong>Format:</strong> Babak penyisihan & final, tim 3 orang</li>
+              <li><strong>Sistem:</strong> Rebutan + wajib + bonus</li>
+              <li><strong>Registrasi:</strong> Maks. 20 tim (daftar segera!)</li>
+            </ul>
+            <div class="lomba-divider"></div>
+            <div class="lomba-benefit">🎁 Hadiah: Uang Tunai + Piala Bergilir + Sertifikat</div>
+            <button class="btn-daftar btn-daftar-green ripple-container" onclick="showForm('cermat')">
+              🧠 Daftar Cerdas Cermat
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PENDAFTARAN ===== -->
+  <section id="pendaftaran">
+    <div class="section-inner">
+      <div class="section-tag reveal">📝 Formulir Pendaftaran</div>
+      <h2 class="section-title reveal">Daftar <span>Sekarang</span></h2>
+      <div class="ornament-divider reveal">✦ ✦ ✦</div>
+      <br>
+      <!-- Tab Buttons -->
+      <div class="form-tabs reveal">
+        <button class="tab-btn active ripple-container" id="tab-kaligrafi" onclick="switchTab('kaligrafi')">🎨 Lomba Kaligrafi</button>
+        <button class="tab-btn ripple-container" id="tab-cermat" onclick="switchTab('cermat')">🧠 Cerdas Cermat</button>
+      </div>
+      <!-- Panel Kaligrafi -->
+      <div class="form-panel active" id="panel-kaligrafi">
+        <div class="form-frame-wrap">
+          <!-- GANTI src iframe di bawah dengan URL Google Form Kaligrafi Anda -->
+          <!-- Contoh: src="https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true" -->
+          <div class="form-frame-placeholder">
+            <div class="icon">🎨</div>
+            <h4>Form Pendaftaran Lomba Kaligrafi</h4>
+            <p>Klik tombol di bawah untuk mengisi formulir pendaftaran.<br>Atau ganti URL iframe dengan link Google Form Anda.</p>
+            <a href="https://forms.gle/PLACEHOLDER_KALIGRAFI" target="_blank" onclick="showToast('Membuka form pendaftaran Kaligrafi...','🎨')">
+              Buka Form Pendaftaran →
+            </a>
+          </div>
+          <!--
+          <iframe class="gform"
+            src="https://docs.google.com/forms/d/e/GANTI_ID_FORM_KALIGRAFI/viewform?embedded=true"
+            frameborder="0" marginheight="0" marginwidth="0">
+            Memuat…
+          </iframe>
+          -->
+        </div>
+      </div>
+      <!-- Panel Cerdas Cermat -->
+      <div class="form-panel" id="panel-cermat">
+        <div class="form-frame-wrap">
+          <div class="form-frame-placeholder">
+            <div class="icon">🧠</div>
+            <h4>Form Pendaftaran Cerdas Cermat</h4>
+            <p>Klik tombol di bawah untuk mengisi formulir pendaftaran.<br>Atau ganti URL iframe dengan link Google Form Anda.</p>
+            <a href="https://forms.gle/PLACEHOLDER_CERMAT" target="_blank" onclick="showToast('Membuka form pendaftaran Cerdas Cermat...','🧠')">
+              Buka Form Pendaftaran →
+            </a>
+          </div>
+          <!--
+          <iframe class="gform"
+            src="https://docs.google.com/forms/d/e/GANTI_ID_FORM_CERMAT/viewform?embedded=true"
+            frameborder="0" marginheight="0" marginwidth="0">
+            Memuat…
+          </iframe>
+          -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RUNDOWN ===== -->
+  <section id="rundown">
+    <div class="section-inner">
+      <div class="section-tag reveal">🕐 Jadwal Acara</div>
+      <h2 class="section-title reveal">Rundown <span>14 Maret 2026</span></h2>
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot">🎤</div>
+          <div class="timeline-content">
+            <div class="timeline-time">08:00 – 08:30 WIB</div>
+            <h4>Pembukaan & Registrasi Peserta</h4>
+            <p>Sambutan panitia, doa pembuka, dan pengarahan teknis lomba kepada peserta.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot">📖</div>
+          <div class="timeline-content">
+            <div class="timeline-time">08:30 – 09:00 WIB</div>
+            <h4>Tilawah Al-Qur'an</h4>
+            <p>Pembacaan ayat-ayat suci Al-Qur'an oleh qori'/qori'ah terpilih sebagai pembuka keberkahan acara.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot">🏆</div>
+          <div class="timeline-content">
+            <div class="timeline-time">09:00 – 11:30 WIB</div>
+            <h4>Pelaksanaan Lomba</h4>
+            <p>Lomba Kaligrafi dan Cerdas Cermat dilaksanakan secara bersamaan di ruangan berbeda.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-3">
+          <div class="timeline-dot">🍽️</div>
+          <div class="timeline-content">
+            <div class="timeline-time">11:30 – 13:00 WIB</div>
+            <h4>Istirahat & Sholat Dzuhur</h4>
+            <p>Waktu istirahat, sholat dzuhur berjamaah, dan ramah tamah antar peserta.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal reveal-delay-4">
+          <div class="timeline-dot">🎉</div>
+          <div class="timeline-content">
+            <div class="timeline-time">13:00 – 14:30 WIB</div>
+            <h4>Pengumuman & Penyerahan Hadiah</h4>
+            <p>Pengumuman pemenang lomba, pemberian piala, hadiah, dan sertifikat kepada para juara.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal">
+          <div class="timeline-dot">🤲</div>
+          <div class="timeline-content">
+            <div class="timeline-time">14:30 – 15:00 WIB</div>
+            <h4>Penutupan & Doa Bersama</h4>
+            <p>Pembacaan doa penutup, foto bersama, dan harapan untuk keberlanjutan kegiatan positif.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="section-inner">
+      <div class="section-tag reveal">❓ Pertanyaan Umum</div>
+      <h2 class="section-title reveal">FAQ <span>Peserta</span></h2>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Apakah pendaftaran lomba gratis?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Ya, seluruh kegiatan lomba Nuzulul Qur'an 1447 H ini GRATIS untuk semua peserta. Kami mengajak seluruh pemuda untuk berpartisipasi tanpa dipungut biaya apapun. Segera daftar sebelum kuota penuh!</div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Apakah alat dan bahan kaligrafi disediakan panitia?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Panitia akan menyediakan kertas / kanvas dasar. Namun peserta disarankan membawa peralatan kaligrafi sendiri seperti pena, cat, kuas, atau alat tulis sesuai gaya kaligrafi yang dikuasai untuk hasil terbaik. Detail teknis akan diinfokan melalui grup peserta setelah pendaftaran.</div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Berapa jumlah anggota dalam satu tim Cerdas Cermat?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Setiap tim Cerdas Cermat terdiri dari 3 anggota. Semua anggota harus berasal dari institusi pendidikan yang sama (SD, SMP, atau SMA/sederajat). Pendaftaran dilakukan per tim dengan mengisi data seluruh anggota pada formulir yang tersedia.</div>
+        </div>
+        <div class="faq-item reveal reveal-delay-3">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Di mana lokasi acara berlangsung?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Acara berlangsung di Mushola Sholihin Siluang. Detail lokasi lengkap dan petunjuk arah dapat dilihat pada bagian Lokasi di bawah, atau langsung buka Google Maps melalui tombol yang tersedia. Datanglah 15 menit sebelum acara dimulai untuk registrasi ulang.</div>
+        </div>
+        <div class="faq-item reveal reveal-delay-4">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Bagaimana cara mendapatkan info terbaru seputar lomba?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Setelah mendaftar, peserta akan dihubungi panitia dan dimasukkan ke dalam grup WhatsApp peserta. Info teknis, konfirmasi, dan pengumuman penting lainnya akan disampaikan melalui grup tersebut. Pastikan nomor WhatsApp yang Anda daftarkan aktif.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOKASI ===== -->
+  <section id="lokasi">
+    <div class="section-inner">
+      <div class="section-tag reveal">📍 Lokasi Acara</div>
+      <h2 class="section-title reveal">Temukan <span>Kami</span></h2>
+      <div class="map-wrap reveal">
+        <!-- GANTI koordinat src iframe dengan lokasi mushola yang tepat -->
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63728.35!2d100.35!3d-0.95!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMCw5NVMgMTAwLDM1RQ!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-info">
+          <div class="map-address">
+            <strong>📍 Mushola Sholihin Siluang</strong>
+            Siluang, Sumatera Barat, Indonesia
+          </div>
+          <a href="https://maps.google.com" target="_blank" class="btn-maps" onclick="showToast('Membuka Google Maps...','📍')">
+            🗺️ Buka di Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SHARE ===== -->
+  <section id="share">
+    <div class="section-inner">
+      <div class="share-box reveal">
+        <div style="font-size:2.5rem;margin-bottom:16px;">📣</div>
+        <h3>Ajak Teman Ikut Lomba!</h3>
+        <p>Bagikan informasi acara ini kepada teman-teman dan saudara agar semakin banyak pemuda yang berpartisipasi dalam kegiatan Islami yang penuh manfaat ini.</p>
+        <a class="btn-wa" href="#" onclick="shareWhatsApp(event)">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Bagikan via WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-text">🕌 Mushola Sholihin</div>
+          <p>Pemuda Mushola Sholihin Siluang hadir untuk menghidupkan kegiatan Islami yang positif, edukatif, dan inspiratif bagi generasi muda.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul>
+            <li><a href="#hero">Beranda</a></li>
+            <li><a href="#tentang">Tentang Acara</a></li>
+            <li><a href="#lomba">Detail Lomba</a></li>
+            <li><a href="#rundown">Rundown</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Lomba</h4>
+          <ul>
+            <li><a href="#" onclick="showForm('kaligrafi')">🎨 Kaligrafi Umum</a></li>
+            <li><a href="#" onclick="showForm('cermat')">🧠 Cerdas Cermat</a></li>
+            <li><a href="#lokasi">📍 Lokasi</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak Panitia</h4>
+          <ul>
+            <li class="footer-contact-item"><span class="icon">📱</span><span>+62 812-XXXX-XXXX<br><small style="opacity:.6">Ketua Panitia</small></span></li>
+            <li class="footer-contact-item"><span class="icon">📱</span><span>+62 813-XXXX-XXXX<br><small style="opacity:.6">Sekretaris</small></span></li>
+            <li class="footer-contact-item"><span class="icon">📧</span><span>musholasholihin@gmail.com</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>Pemuda Mushola Sholihin Siluang</span>. Nuzulul Qur'an 1447 H.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" title="Instagram">📸</a>
+          <a href="#" class="social-btn" title="WhatsApp">💬</a>
+          <a href="#" class="social-btn" title="YouTube">▶️</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+
+  </script>
+</body>
+</html>
