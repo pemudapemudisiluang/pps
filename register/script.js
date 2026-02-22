@@ -1,27 +1,29 @@
 // ============================================================
-    // GUEST NAME FROM URL PATH
-    // URL format: /register/Nama-Tamu  atau  ?tamu=Nama-Tamu
+    // BACA NAMA TAMU DARI URL
+    // Contoh URL: remajasholihinsiluang.my.id/register(Ahmad-Fauzi)
+    // atau pakai query string: ?tamu=Ahmad+Fauzi
     // ============================================================
-    (function setGuestName() {
-      let name = '';
-      // Ambil dari path: /register/nama-tamu
-      const pathMatch = window.location.pathname.match(/\/(?:[^/]*\/)?([^/]+)\/?$/);
-      if (pathMatch && pathMatch[1] && pathMatch[1] !== 'index.html' && pathMatch[1] !== '') {
-        name = pathMatch[1];
+    function getGuestName() {
+      // Coba baca dari path — format: /register(nama-tamu)
+      const pathMatch = window.location.pathname.match(/\(([^)]+)\)/);
+      if (pathMatch) {
+        return decodeURIComponent(pathMatch[1].replace(/-/g, ' '));
       }
-      // Fallback: query param ?tamu=nama
-      if (!name) {
-        const params = new URLSearchParams(window.location.search);
-        name = params.get('tamu') || '';
+
+      // Coba baca dari query string — format: ?tamu=nama atau ?name=nama
+      const params = new URLSearchParams(window.location.search);
+      const fromQuery = params.get('tamu') || params.get('name') || params.get('nama');
+      if (fromQuery) {
+        return decodeURIComponent(fromQuery);
       }
-      if (name) {
-        // Decode URI, ganti tanda hubung/underscore jadi spasi, title-case
-        name = decodeURIComponent(name.replace(/[-_]/g, ' '));
-        name = name.replace(/\b\w/g, c => c.toUpperCase());
-        document.getElementById('popup-guest-name').textContent = name;
-      }
-      // Jika tidak ada nama, tetap tampilkan default "Sauda/i"
-    })();
+
+      // Fallback jika tidak ada nama
+      return 'Sauda/i';
+    }
+
+    // Set nama ke dalam popup sebelum loading selesai
+    const guestName = getGuestName();
+    document.getElementById('popup-guest-name').textContent = guestName;
 
     // ============================================================
     // LOADING SCREEN
@@ -41,9 +43,14 @@
     // ============================================================
     function closePopup() {
       document.getElementById('popup-overlay').classList.remove('show');
-      const guestName = document.getElementById('popup-guest-name').textContent;
-      const greeting = guestName === 'Sauda/i' ? 'Selamat datang!' : `Selamat datang, ${guestName}!`;
-      showToast(`${greeting} Marhaban ya Ramadhan 🌙`, '🌙');
+      const name = document.getElementById('popup-guest-name').textContent;
+      const isDefault = name === 'Sauda/i';
+      showToast(
+        isDefault
+          ? 'Selamat datang! Marhaban ya Ramadhan 🌙'
+          : `Selamat datang, ${name}! Marhaban ya Ramadhan 🌙`,
+        '🌙'
+      );
     }
 
     // Klik di luar popup untuk tutup
@@ -118,10 +125,8 @@
     // TAB SWITCH (FORM LOMBA)
     // ============================================================
     function switchTab(tab) {
-      // Reset semua tab & panel
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
-      // Aktifkan yang dipilih
       document.getElementById('tab-' + tab).classList.add('active');
       document.getElementById('panel-' + tab).classList.add('active');
       showToast(`Tab ${tab === 'kaligrafi' ? 'Kaligrafi 🎨' : 'Cerdas Cermat 🧠'} dipilih`);
@@ -139,9 +144,7 @@
     function toggleFaq(btn) {
       const item = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
-      // Tutup semua FAQ
       document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      // Buka yang diklik (jika sebelumnya tertutup)
       if (!isOpen) item.classList.add('open');
     }
 
