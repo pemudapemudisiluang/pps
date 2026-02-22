@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -21,16 +21,39 @@
   <!-- ===== WELCOME POPUP ===== -->
   <div id="popup-overlay">
     <div class="popup-card">
-      <div class="popup-icon">🌙</div>
+      <!-- Ornamen sudut dekoratif -->
+      <div class="popup-corner tl"></div>
+      <div class="popup-corner tr"></div>
+      <div class="popup-corner bl"></div>
+      <div class="popup-corner br"></div>
+
+      <div class="popup-moon-icon">🌙</div>
+
       <div class="popup-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-      <div class="popup-kepada-label">Kepada Yth.</div>
-      <div class="popup-guest-box">
+
+      <div class="popup-from-label">Kepada Yth.</div>
+
+      <!-- Kotak nama undangan -->
+      <div class="popup-name-box">
+        <div class="popup-name-shimmer"></div>
         <span id="popup-guest-name">Sauda/i</span>
       </div>
-      <div class="popup-desc">
-        Kami, <strong>Pemuda Mushola Sholihin Siluang</strong> mengundang Anda dalam rangka memperingati <strong>Nuzulul Qur'an 1447 H</strong>. Semoga kita semua mendapat keberkahan Ramadhan. 🌟
+
+      <div class="popup-divider-ornament">✦ ✦ ✦</div>
+
+      <p class="popup-body">
+        Kami, <strong>Pemuda Mushola Sholihin Siluang</strong> mengundang Anda dalam rangka memperingati
+        <strong>Nuzulul Qur'an 1447 H</strong>. Semoga kita semua mendapat keberkahan Ramadhan. 🌟
+      </p>
+
+      <div class="popup-event-info">
+        <div class="popup-event-row"><span>📅</span><span>Sabtu, 14 Maret 2026</span></div>
+        <div class="popup-event-row"><span>📍</span><span>Mushola Sholihin Siluang</span></div>
       </div>
-      <button class="popup-btn ripple-container" onclick="closePopup()">Masuk ke Undangan →</button>
+
+      <button class="popup-btn ripple-container" onclick="closePopup()">
+        Masuk ke Undangan →
+      </button>
     </div>
   </div>
 
@@ -77,7 +100,6 @@
   <!-- ===== HERO ===== -->
   <section id="hero">
     <div class="hero-bg"></div>
-    <!-- Stars -->
     <div class="hero-stars" id="hero-stars"></div>
     <div class="hero-deco top-left">☪</div>
     <div class="hero-deco bot-right">☪</div>
@@ -157,7 +179,6 @@
       <div class="section-tag reveal">🏆 Kegiatan Lomba</div>
       <h2 class="section-title reveal">Detail <span>Perlombaan</span></h2>
       <div class="lomba-grid">
-        <!-- Kaligrafi -->
         <div class="lomba-card reveal">
           <div class="lomba-card-header gold-accent">
             <div class="lomba-icon">🎨</div>
@@ -181,7 +202,6 @@
             </button>
           </div>
         </div>
-        <!-- Cerdas Cermat -->
         <div class="lomba-card reveal reveal-delay-2">
           <div class="lomba-card-header green-accent">
             <div class="lomba-icon">🧠</div>
@@ -216,16 +236,12 @@
       <h2 class="section-title reveal">Daftar <span>Sekarang</span></h2>
       <div class="ornament-divider reveal">✦ ✦ ✦</div>
       <br>
-      <!-- Tab Buttons -->
       <div class="form-tabs reveal">
         <button class="tab-btn active ripple-container" id="tab-kaligrafi" onclick="switchTab('kaligrafi')">🎨 Lomba Kaligrafi</button>
         <button class="tab-btn ripple-container" id="tab-cermat" onclick="switchTab('cermat')">🧠 Cerdas Cermat</button>
       </div>
-      <!-- Panel Kaligrafi -->
       <div class="form-panel active" id="panel-kaligrafi">
         <div class="form-frame-wrap">
-          <!-- GANTI src iframe di bawah dengan URL Google Form Kaligrafi Anda -->
-          <!-- Contoh: src="https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true" -->
           <div class="form-frame-placeholder">
             <div class="icon">🎨</div>
             <h4>Form Pendaftaran Lomba Kaligrafi</h4>
@@ -234,16 +250,8 @@
               Buka Form Pendaftaran →
             </a>
           </div>
-          <!--
-          <iframe class="gform"
-            src="https://docs.google.com/forms/d/e/GANTI_ID_FORM_KALIGRAFI/viewform?embedded=true"
-            frameborder="0" marginheight="0" marginwidth="0">
-            Memuat…
-          </iframe>
-          -->
         </div>
       </div>
-      <!-- Panel Cerdas Cermat -->
       <div class="form-panel" id="panel-cermat">
         <div class="form-frame-wrap">
           <div class="form-frame-placeholder">
@@ -254,13 +262,6 @@
               Buka Form Pendaftaran →
             </a>
           </div>
-          <!--
-          <iframe class="gform"
-            src="https://docs.google.com/forms/d/e/GANTI_ID_FORM_CERMAT/viewform?embedded=true"
-            frameborder="0" marginheight="0" marginwidth="0">
-            Memuat…
-          </iframe>
-          -->
         </div>
       </div>
     </div>
@@ -276,7 +277,7 @@
           <div class="timeline-dot">📋</div>
           <div class="timeline-content">
             <div class="timeline-time">20 Februari - 14 Maret</div>
-            <h4>Pendaftaran & Registrasi</h4>
+            <h4>Pendaftaran &amp; Registrasi</h4>
             <p>Pendaftaran online dapat dilakukan dari sekarang. untuk offline bisa sebelum acara berlangsung di meja panitia.</p>
           </div>
         </div>
@@ -284,8 +285,8 @@
           <div class="timeline-dot">🎤</div>
           <div class="timeline-content">
             <div class="timeline-time">21:00 - 21:30</div>
-            <h4>Sambutan & Pembukaan Acara</h4>
-            <p>Sabutan dari pengurus, RT, Jorong, Nagari, Ketua Pelaksana.</p>
+            <h4>Sambutan &amp; Pembukaan Acara</h4>
+            <p>Sambutan dari pengurus, RT, Jorong, Nagari, Ketua Pelaksana.</p>
           </div>
         </div>
         <div class="timeline-item reveal reveal-delay-2">
@@ -297,7 +298,7 @@
           </div>
         </div>
         <div class="timeline-item reveal reveal-delay-3">
-          <div class="timeline-dot">️🖼️</div>
+          <div class="timeline-dot">🖼️</div>
           <div class="timeline-content">
             <div class="timeline-time">21:40 – 23:10 WIB</div>
             <h4>Mulai lomba Kaligrafi</h4>
@@ -375,7 +376,6 @@
       <div class="section-tag reveal">📍 Lokasi Acara</div>
       <h2 class="section-title reveal">Temukan <span>Kami</span></h2>
       <div class="map-wrap reveal">
-        <!-- GANTI koordinat src iframe dengan lokasi mushola yang tepat -->
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15959.044092184235!2d100.72658507544516!3d-0.3070638264454767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2ac9f4a15d736b%3A0xab98f89e9d0f8a23!2sMushola%20Sholihin!5e0!3m2!1sid!2sid!4v1771750780273!5m2!1sid!2sid"
           allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
@@ -439,7 +439,7 @@
           <ul>
             <li class="footer-contact-item"><span class="icon">📱</span><span>0822-8731-3413<br><small style="opacity:.6">Ketua Panitia</small></span></li>
             <li class="footer-contact-item"><span class="icon">📱</span><span>0831-5539-9034<br><small style="opacity:.6">Sekretaris</small></span></li>
-            <li class="footer-contact-item"><span class="icon">📧</span><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7303161e06171203161e06171a001a1f06121d1433141e121a1f5d101c1e">[email&#160;protected]</a></span></li>
+            <li class="footer-contact-item"><span class="icon">📧</span><span>pemuda.sholihin@gmail.com</span></li>
           </ul>
         </div>
       </div>
@@ -455,7 +455,6 @@
     </div>
   </footer>
 
-  <!-- ===== JAVASCRIPT ===== -->
   <script src="script.js"></script>
 </body>
 </html>
