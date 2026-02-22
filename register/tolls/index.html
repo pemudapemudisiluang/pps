@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Link Undangan – Nuzulul Qur'an 1447 H</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #07140c;
+      --surface:   #0d2218;
+      --surface2:  #122b1e;
+      --emerald:   #2d7a4f;
+      --bright:    #3daf6e;
+      --gold:      #c8a84b;
+      --gold-l:    #e8c96d;
+      --white:     #f0f7f2;
+      --muted:     rgba(240,247,242,0.5);
+      --border:    rgba(200,168,75,0.2);
+      --radius:    14px;
+      --ease:      cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BG PATTERN ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 40% at 15% 20%, rgba(45,122,79,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 85% 80%, rgba(200,168,75,0.09) 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='rgba(45,122,79,0.06)' stroke-width='1'%3E%3Cpath d='M30 3L57 18v24L30 57 3 42V18z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--emerald); border-radius: 3px; }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeSlideDown 0.7s var(--ease) both;
+    }
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,168,75,0.1);
+      border: 1px solid rgba(200,168,75,0.3);
+      color: var(--gold);
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--white) 30%, var(--gold-l));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    .header p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .header-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: linear-gradient(145deg, var(--surface), var(--surface2));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,168,75,0.1);
+      animation: fadeSlideUp 0.7s var(--ease) 0.15s both;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--emerald), var(--gold), var(--emerald));
+      background-size: 200% 100%;
+      animation: shimmerBar 3s linear infinite;
+    }
+    @keyframes shimmerBar {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STEP LABEL ── */
+    .step-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    /* ── FORM GROUP ── */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: rgba(240,247,242,0.7);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    label span {
+      font-weight: 400;
+      opacity: 0.6;
+      font-size: 0.78rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: rgba(7,20,12,0.7);
+      border: 1.5px solid rgba(200,168,75,0.2);
+      border-radius: var(--radius);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 14px 18px;
+      transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type="text"]::placeholder { color: rgba(240,247,242,0.28); }
+    input[type="text"]:focus {
+      border-color: rgba(200,168,75,0.6);
+      box-shadow: 0 0 0 3px rgba(200,168,75,0.1);
+    }
+
+    /* ── QUICK FILL CHIPS ── */
+    .quick-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .chips {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .chip {
+      background: rgba(45,122,79,0.12);
+      border: 1px solid rgba(45,122,79,0.3);
+      color: rgba(240,247,242,0.75);
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+    }
+    .chip:hover {
+      background: rgba(45,122,79,0.28);
+      border-color: var(--bright);
+      color: var(--white);
+      transform: translateY(-1px);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 24px 0;
+    }
+
+    /* ── GENERATE BUTTON ── */
+    .btn-generate {
+      width: 100%;
+      background: linear-gradient(135deg, var(--emerald), var(--bright));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.25s var(--ease);
+      box-shadow: 0 4px 24px rgba(45,122,79,0.4);
+      position: relative; overflow: hidden;
+    }
+    .btn-generate::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(45,122,79,0.55);
+    }
+    .btn-generate:hover::after { opacity: 1; }
+    .btn-generate:active { transform: translateY(0); }
+
+    /* ── RESULT SECTION ── */
+    .result-section {
+      margin-top: 28px;
+      display: none;
+      animation: fadeSlideUp 0.5s var(--ease) both;
+    }
+    .result-section.show { display: block; }
+
+    .result-box {
+      background: rgba(7,20,12,0.8);
+      border: 1.5px solid rgba(200,168,75,0.3);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .result-url {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--gold-l);
+      word-break: break-all;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .action-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .btn-action {
+      flex: 1;
+      min-width: 120px;
+      padding: 13px 16px;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.22s var(--ease);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-copy {
+      background: linear-gradient(135deg, var(--gold), var(--gold-l));
+      color: #0a1f0f;
+      box-shadow: 0 4px 16px rgba(200,168,75,0.3);
+    }
+    .btn-copy:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,168,75,0.45); }
+    .btn-copy.copied {
+      background: linear-gradient(135deg, #2d7a4f, #3daf6e);
+      color: #fff;
+    }
+    .btn-wa {
+      background: #25D366;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+    }
+    .btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.45); }
+    .btn-open {
+      background: rgba(45,122,79,0.15);
+      border: 1.5px solid rgba(45,122,79,0.4);
+      color: var(--bright);
+    }
+    .btn-open:hover { background: rgba(45,122,79,0.28); transform: translateY(-2px); }
+
+    /* ── PREVIEW CARD ── */
+    .preview-card {
+      margin-top: 24px;
+      background: linear-gradient(135deg, rgba(13,34,24,0.9), rgba(18,43,30,0.9));
+      border: 1px solid rgba(200,168,75,0.15);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .preview-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--emerald), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Amiri', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      letter-spacing: 0;
+    }
+    .preview-info { flex: 1; min-width: 0; }
+    .preview-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .preview-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .preview-moon { font-size: 1.6rem; }
+
+    /* ── HISTORY ── */
+    .history-section {
+      margin-top: 32px;
+      animation: fadeSlideUp 0.7s var(--ease) 0.3s both;
+    }
+    .history-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px;
+    }
+    .history-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .btn-clear-history {
+      background: none;
+      border: 1px solid rgba(200,168,75,0.2);
+      color: rgba(200,168,75,0.5);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear-history:hover { border-color: var(--gold); color: var(--gold); }
+
+    #history-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .history-item {
+      background: rgba(13,34,24,0.6);
+      border: 1px solid rgba(200,168,75,0.12);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      position: relative;
+    }
+    .history-item:hover {
+      border-color: rgba(200,168,75,0.3);
+      background: rgba(13,34,24,0.9);
+      transform: translateX(3px);
+    }
+    .history-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--emerald), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .history-info { flex: 1; min-width: 0; }
+    .history-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-url {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-actions {
+      display: flex; gap: 6px;
+    }
+    .history-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(200,168,75,0.2);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .history-btn:hover { background: rgba(200,168,75,0.12); color: var(--gold); border-color: var(--gold); }
+    .history-btn.del:hover { background: rgba(200,50,50,0.15); color: #ff6b6b; border-color: rgba(200,50,50,0.4); }
+
+    .empty-history {
+      text-align: center;
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .empty-history .icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.35s var(--ease), opacity 0.35s;
+      opacity: 0;
+      z-index: 9999;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      color: rgba(240,247,242,0.2);
+      font-size: 0.78rem;
+      animation: fadeSlideUp 0.7s var(--ease) 0.5s both;
+    }
+    .footer span { color: var(--gold); opacity: 0.5; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 480px) {
+      .card { padding: 24px 20px; }
+      .action-row { flex-direction: column; }
+      .btn-action { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="header-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+    <div class="header-badge">🌙 Nuzulul Qur'an 1447 H</div>
+    <h1>Generator Link Undangan</h1>
+    <p>Buat link undangan personal untuk setiap tamu.<br>Nama tamu akan tampil otomatis di popup undangan.</p>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+    <div class="step-label">✦ Langkah 1 — Isi Data Tamu</div>
+    <div class="card-title">Nama yang Diundang</div>
+
+    <div class="form-group">
+      <label for="guest-input">Nama Tamu <span>— gunakan nama lengkap atau panggilan</span></label>
+      <input
+        type="text"
+        id="guest-input"
+        placeholder="contoh: Harun Alfala"
+        autocomplete="off"
+        oninput="onNameInput()"
+        onkeydown="if(event.key==='Enter') generateLink()"
+      />
+    </div>
+
+    <div class="quick-label">✦ Isi cepat contoh nama:</div>
+    <div class="chips">
+      <div class="chip" onclick="fillName('Prabowo Subianto')">Prabowo Subianto</div>
+      <div class="chip" onclick="fillName('Fufufafa hehe')">Fufufafa hehe</div>
+      <div class="chip" onclick="fillName('Puan Maharani')">Puan Maharani</div>
+      <div class="chip" onclick="fillName('Bapak Bahlil')">Bapak Bahlil</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="step-label">✦ Langkah 2 — Generate</div>
+    <button class="btn-generate" onclick="generateLink()">
+      🔗 Buat Link Undangan
+    </button>
+
+    <!-- RESULT -->
+    <div class="result-section" id="result-section">
+      <div class="divider"></div>
+      <div class="step-label">✦ Link Siap Digunakan</div>
+
+      <!-- Preview kartu tamu -->
+      <div class="preview-card" id="preview-card">
+        <div class="preview-avatar" id="preview-avatar">?</div>
+        <div class="preview-info">
+          <div class="preview-name" id="preview-name">—</div>
+          <div class="preview-desc">Akan muncul di popup undangan sebagai nama tamu</div>
+        </div>
+        <div class="preview-moon">🌙</div>
+      </div>
+
+      <!-- URL box -->
+      <div class="result-box" style="margin-top:16px;">
+        <div class="result-url" id="result-url">—</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <button class="btn-action btn-copy" id="btn-copy" onclick="copyLink()">
+          📋 Salin Link
+        </button>
+        <button class="btn-action btn-wa" onclick="shareWA()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Kirim WA
+        </button>
+        <button class="btn-action btn-open" onclick="openLink()">
+          🔍 Preview
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <div class="history-header">
+      <div class="history-title">📋 Riwayat Link Dibuat</div>
+      <button class="btn-clear-history" onclick="clearHistory()">Hapus Semua</button>
+    </div>
+    <div id="history-list">
+      <div class="empty-history">
+        <div class="icon">🔗</div>
+        <div>Belum ada link yang dibuat.<br>Generate link pertama Anda!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2026 <span>Pemuda Mushola Sholihin Siluang</span> · Nuzulul Qur'an 1447 H
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  // ── CONFIG ──
+  const BASE_URL = 'https://www.remajasholihinsiluang.my.id/register/';
+  const STORAGE_KEY = 'nq_link_history';
+
+  let currentURL = '';
+  let history = loadHistory();
+
+  // ── LOAD & SAVE HISTORY ──
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveHistory() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  }
+
+  // ── INIT ──
+  renderHistory();
+
+  // ── NAME INPUT HANDLER ──
+  function onNameInput() {
+    // Live preview jika sudah ada URL digenerate
+    const name = document.getElementById('guest-input').value.trim();
+    if (currentURL && name) updatePreview(name);
+  }
+
+  // ── FILL QUICK CHIP ──
+  function fillName(name) {
+    document.getElementById('guest-input').value = name;
+    onNameInput();
+    document.getElementById('guest-input').focus();
+  }
+
+  // ── GENERATE ──
+  function generateLink() {
+    const raw = document.getElementById('guest-input').value.trim();
+    if (!raw) {
+      showToast('⚠️ Masukkan nama tamu terlebih dahulu!');
+      document.getElementById('guest-input').focus();
+      shake(document.getElementById('guest-input'));
+      return;
+    }
+
+    // Encode nama sebagai query string
+    const encoded = encodeURIComponent(raw);
+    currentURL = `${BASE_URL}?tamu=${encoded}`;
+
+    // Tampilkan result
+    document.getElementById('result-url').textContent = currentURL;
+    updatePreview(raw);
+
+    const section = document.getElementById('result-section');
+    section.classList.add('show');
+    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Simpan ke history (hindari duplikat)
+    const exists = history.find(h => h.name.toLowerCase() === raw.toLowerCase());
+    if (!exists) {
+      history.unshift({ name: raw, url: currentURL, time: Date.now() });
+      if (history.length > 30) history.pop();
+      saveHistory();
+      renderHistory();
+    }
+
+    showToast('✅ Link berhasil dibuat!');
+  }
+
+  // ── UPDATE PREVIEW ──
+  function updatePreview(name) {
+    const initials = name.split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase() || '?';
+    document.getElementById('preview-avatar').textContent = initials;
+    document.getElementById('preview-name').textContent = name;
+  }
+
+  // ── COPY LINK ──
+  function copyLink() {
+    if (!currentURL) return;
+    navigator.clipboard.writeText(currentURL).then(() => {
+      const btn = document.getElementById('btn-copy');
+      btn.classList.add('copied');
+      btn.innerHTML = '✓ Tersalin!';
+      showToast('📋 Link berhasil disalin ke clipboard!');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '📋 Salin Link';
+      }, 2200);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = currentURL;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('📋 Link berhasil disalin!');
+    });
+  }
+
+  // ── SHARE WA ──
+  function shareWA() {
+    if (!currentURL) return;
+    const name = document.getElementById('guest-input').value.trim() || 'Sauda/i';
+    const msg = encodeURIComponent(
+      `Assalamu'alaikum, ${name} 🌙\n\n` +
+      `*Pemuda Mushola Sholihin Siluang* mengundang Anda dalam rangka memperingati *Nuzulul Qur'an 1447 H*.\n\n` +
+      `📅 Sabtu, 14 Maret 2026\n` +
+      `📍 Mushola Sholihin Siluang\n\n` +
+      `🏆 Kegiatan Lomba:\n` +
+      `🎨 Kaligrafi (Tingkat Umum) — GRATIS\n` +
+      `🧠 Cerdas Cermat (SMA ke Bawah) — GRATIS\n\n` +
+      `Klik link undangan Anda di bawah ini:\n` +
+      `${currentURL}\n\n` +
+      `Semoga kita semua mendapat keberkahan Ramadhan. Aamiin 🤲`
+    );
+    window.open(`https://wa.me/?text=${msg}`, '_blank');
+    showToast('📱 Membuka WhatsApp...');
+  }
+
+  // ── OPEN LINK ──
+  function openLink() {
+    if (!currentURL) return;
+    window.open(currentURL, '_blank');
+  }
+
+  // ── HISTORY ──
+  function renderHistory() {
+    const list = document.getElementById('history-list');
+    if (!history.length) {
+      list.innerHTML = `
+        <div class="empty-history">
+          <div class="icon">🔗</div>
+          <div>Belum ada link yang dibuat.<br>Generate link pertama Anda!</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = history.map((item, i) => {
+      const initials = item.name.split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase() || '?';
+      const timeStr = formatTime(item.time);
+      return `
+        <div class="history-item" title="Klik untuk load link ini">
+          <div class="history-avatar">${initials}</div>
+          <div class="history-info" onclick="loadFromHistory(${i})">
+            <div class="history-name">${escHtml(item.name)}</div>
+            <div class="history-url">${escHtml(item.url)} · ${timeStr}</div>
+          </div>
+          <div class="history-actions">
+            <button class="history-btn" onclick="copyHistoryLink(${i})" title="Salin link">📋</button>
+            <button class="history-btn" onclick="waHistoryLink(${i})" title="Kirim WhatsApp">💬</button>
+            <button class="history-btn del" onclick="deleteHistory(${i})" title="Hapus">🗑️</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function loadFromHistory(i) {
+    const item = history[i];
+    document.getElementById('guest-input').value = item.name;
+    currentURL = item.url;
+    document.getElementById('result-url').textContent = currentURL;
+    updatePreview(item.name);
+    document.getElementById('result-section').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast(`✅ Link ${item.name} dimuat!`);
+  }
+
+  function copyHistoryLink(i) {
+    navigator.clipboard.writeText(history[i].url).catch(() => {});
+    showToast('📋 Link disalin!');
+  }
+
+  function waHistoryLink(i) {
+    const item = history[i];
+    const msg = encodeURIComponent(
+      `Assalamu'alaikum, ${item.name} 🌙\n\n` +
+      `Klik link undangan Nuzulul Qur'an 1447 H Anda:\n${item.url}\n\n` +
+      `📅 Sabtu, 14 Maret 2026 · Mushola Sholihin Siluang`
+    );
+    window.open(`https://wa.me/?text=${msg}`, '_blank');
+  }
+
+  function deleteHistory(i) {
+    history.splice(i, 1);
+    saveHistory();
+    renderHistory();
+    showToast('🗑️ Dihapus dari riwayat');
+  }
+
+  function clearHistory() {
+    if (!history.length) return;
+    history = [];
+    saveHistory();
+    renderHistory();
+    showToast('🗑️ Semua riwayat dihapus');
+  }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ── SHAKE ANIMATION ──
+  function shake(el) {
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = 'shake 0.4s ease';
+    setTimeout(() => el.style.animation = '', 400);
+  }
+
+  // ── HELPERS ──
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function formatTime(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 60000) return 'baru saja';
+    if (diff < 3600000) return Math.floor(diff/60000) + ' menit lalu';
+    if (diff < 86400000) return Math.floor(diff/3600000) + ' jam lalu';
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'short' });
+  }
+</script>
+
+<style>
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
+</style>
+
+</body>
+</html>
