@@ -1,4 +1,29 @@
- // ============================================================
+// ============================================================
+    // GUEST NAME FROM URL PATH
+    // URL format: /register/Nama-Tamu  atau  ?tamu=Nama-Tamu
+    // ============================================================
+    (function setGuestName() {
+      let name = '';
+      // Ambil dari path: /register/nama-tamu
+      const pathMatch = window.location.pathname.match(/\/(?:[^/]*\/)?([^/]+)\/?$/);
+      if (pathMatch && pathMatch[1] && pathMatch[1] !== 'index.html' && pathMatch[1] !== '') {
+        name = pathMatch[1];
+      }
+      // Fallback: query param ?tamu=nama
+      if (!name) {
+        const params = new URLSearchParams(window.location.search);
+        name = params.get('tamu') || '';
+      }
+      if (name) {
+        // Decode URI, ganti tanda hubung/underscore jadi spasi, title-case
+        name = decodeURIComponent(name.replace(/[-_]/g, ' '));
+        name = name.replace(/\b\w/g, c => c.toUpperCase());
+        document.getElementById('popup-guest-name').textContent = name;
+      }
+      // Jika tidak ada nama, tetap tampilkan default "Sauda/i"
+    })();
+
+    // ============================================================
     // LOADING SCREEN
     // ============================================================
     window.addEventListener('load', () => {
@@ -16,7 +41,9 @@
     // ============================================================
     function closePopup() {
       document.getElementById('popup-overlay').classList.remove('show');
-      showToast('Selamat datang! Marhaban ya Ramadhan 🌙', '🌙');
+      const guestName = document.getElementById('popup-guest-name').textContent;
+      const greeting = guestName === 'Sauda/i' ? 'Selamat datang!' : `Selamat datang, ${guestName}!`;
+      showToast(`${greeting} Marhaban ya Ramadhan 🌙`, '🌙');
     }
 
     // Klik di luar popup untuk tutup
