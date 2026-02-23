@@ -537,7 +537,7 @@ nav {
 }
 nav.nav-scrolled {
   background: rgba(10,31,15,0.0);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(100px);
   border-bottom-color: rgba(200,168,75,0.12);
 }
 nav.nav-hidden { top: -80px; }
