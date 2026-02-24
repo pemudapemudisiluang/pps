@@ -11,7 +11,7 @@ function getGuestName() {
   if (fromQuery) {
     return decodeURIComponent(fromQuery);
   }
-  return 'Sauda/i';
+  return 'Saudara/i';
 }
 
 const guestName = getGuestName();
