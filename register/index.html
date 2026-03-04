@@ -1,446 +1,421 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#050A14"/>
   <title>Sedang Diperbaiki</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
+    /* ══════════════════════════════════════
+       RESET & TOKENS
+    ══════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #050A14;
-      --primary: #00FFCC;
+      --bg:        #050A14;
+      --primary:   #00FFCC;
       --secondary: #FF3366;
-      --accent: #FFD700;
-      --text: #E0F0FF;
-      --muted: #4A6080;
-      --glow: 0 0 20px rgba(0,255,204,0.5), 0 0 60px rgba(0,255,204,0.2);
+      --accent:    #FFD700;
+      --text:      #E0F0FF;
+      --muted:     #4A6080;
+      --glow:      0 0 20px rgba(0,255,204,.5), 0 0 60px rgba(0,255,204,.2);
+      --card-px:   clamp(20px, 6vw, 56px);
+      --card-py:   clamp(32px, 6vw, 60px);
+      --gap-sm:    clamp(12px, 3vw, 20px);
+      --gap-md:    clamp(20px, 4vw, 40px);
     }
+
+    html { overflow-y: auto; overflow-x: hidden; }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Syne', sans-serif;
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
       position: relative;
+      padding: max(clamp(16px,4vw,40px), env(safe-area-inset-top))
+               max(clamp(16px,4vw,40px), env(safe-area-inset-right))
+               max(clamp(16px,4vw,40px), env(safe-area-inset-bottom))
+               max(clamp(16px,4vw,40px), env(safe-area-inset-left));
     }
 
-    /* ── Grid BG ── */
+    /* ══ BG LAYERS ══ */
     .grid-bg {
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(0,255,204,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,204,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
+        linear-gradient(rgba(0,255,204,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,204,.04) 1px, transparent 1px);
+      background-size: 50px 50px;
       animation: gridShift 20s linear infinite;
     }
-    @keyframes gridShift {
-      0%   { background-position: 0 0; }
-      100% { background-position: 60px 60px; }
-    }
+    @keyframes gridShift { to { background-position: 50px 50px; } }
 
-    /* ── Scanlines ── */
     .scanlines {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background: repeating-linear-gradient(
         0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
-      );
+        rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
     }
-
-    /* ── Floating orbs ── */
-    .orb {
-      position: fixed; border-radius: 50%; filter: blur(80px);
-      animation: orbFloat linear infinite;
-      z-index: 0;
-    }
-    .orb-1 { width: 400px; height: 400px; background: rgba(0,255,204,0.08); top:-10%; left:-10%; animation-duration: 25s; }
-    .orb-2 { width: 300px; height: 300px; background: rgba(255,51,102,0.07); bottom:-5%; right:-5%; animation-duration: 30s; animation-delay: -10s; }
-    .orb-3 { width: 200px; height: 200px; background: rgba(255,215,0,0.06); top:40%; left:60%; animation-duration: 20s; animation-delay: -5s; }
-    @keyframes orbFloat {
-      0%,100% { transform: translate(0,0) scale(1); }
-      33%      { transform: translate(40px,-30px) scale(1.1); }
-      66%      { transform: translate(-20px,20px) scale(0.9); }
-    }
-
-    /* ── Main card ── */
-    .card {
-      position: relative; z-index: 10;
-      text-align: center;
-      padding: 60px 50px;
-      max-width: 680px; width: 90%;
-      background: rgba(5,10,20,0.7);
-      border: 1px solid rgba(0,255,204,0.15);
-      border-radius: 4px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 0 1px rgba(0,255,204,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
-      animation: cardIn 1s cubic-bezier(0.16,1,0.3,1) both;
-    }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(40px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ── Corner decorations ── */
-    .card::before, .card::after {
-      content: '';
-      position: absolute;
-      width: 20px; height: 20px;
-      border-color: var(--primary);
-      border-style: solid;
-    }
-    .card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-    .card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-    /* ── Gear cluster ── */
-    .gear-wrap {
-      position: relative;
-      width: 130px; height: 130px;
-      margin: 0 auto 36px;
-    }
-    .gear {
-      position: absolute;
-      border-radius: 50%;
-      border: 3px solid var(--primary);
-      display: flex; align-items: center; justify-content: center;
-    }
-    /* teeth via box-shadow trick */
-    .gear svg { overflow: visible; }
-
-    .gear-big {
-      width: 90px; height: 90px;
-      top: 20px; left: 5px;
-      animation: spinCW 4s linear infinite;
-    }
-    .gear-small {
-      width: 50px; height: 50px;
-      top: 0; right: 0;
-      animation: spinCCW 2.22s linear infinite;
-      border-color: var(--secondary);
-    }
-    .gear-tiny {
-      width: 34px; height: 34px;
-      bottom: 0; right: 20px;
-      animation: spinCW 1.5s linear infinite;
-      border-color: var(--accent);
-    }
-    @keyframes spinCW  { to { transform: rotate(360deg); } }
-    @keyframes spinCCW { to { transform: rotate(-360deg); } }
-
-    /* ── Badge ── */
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-      color: var(--primary);
-      border: 1px solid rgba(0,255,204,0.3);
-      padding: 6px 14px; border-radius: 2px;
-      margin-bottom: 24px;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    .badge-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--primary);
-      animation: blink 1s step-end infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(0,255,204,0.3); }
-      50%      { box-shadow: 0 0 0 6px rgba(0,255,204,0); }
-    }
-
-    /* ── Heading ── */
-    h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-    .h1-line1 { color: #fff; display: block; }
-    .h1-line2 {
-      display: block;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ── Description ── */
-    .desc {
-      color: var(--muted);
-      font-size: 15px; line-height: 1.7;
-      margin-bottom: 40px;
-      font-family: 'Space Mono', monospace;
-    }
-    .desc span { color: var(--accent); }
-
-    /* ── Progress bar ── */
-    .progress-wrap { margin-bottom: 40px; text-align: left; }
-    .progress-label {
-      display: flex; justify-content: space-between;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--muted);
-      letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .progress-label .pct { color: var(--primary); font-weight: 700; }
-    .progress-track {
-      height: 4px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 2px; overflow: hidden;
-      position: relative;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 2px;
-      width: 0%;
-      animation: fillBar 3s cubic-bezier(0.4,0,0.2,1) 0.8s forwards;
-      position: relative;
-    }
-    .progress-fill::after {
-      content: '';
-      position: absolute; right: 0; top: -4px;
-      width: 12px; height: 12px;
-      background: var(--primary);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--primary);
-    }
-    @keyframes fillBar { to { width: 72%; } }
-
-    /* ── Status list ── */
-    .status-list {
-      list-style: none;
-      display: flex; flex-direction: column; gap: 10px;
-      text-align: left; margin-bottom: 40px;
-    }
-    .status-item {
-      display: flex; align-items: center; gap: 12px;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px; color: var(--muted);
-      opacity: 0;
-      animation: fadeUp 0.5s ease forwards;
-    }
-    .status-item:nth-child(1) { animation-delay: 1.2s; }
-    .status-item:nth-child(2) { animation-delay: 1.5s; }
-    .status-item:nth-child(3) { animation-delay: 1.8s; }
-    .status-item:nth-child(4) { animation-delay: 2.1s; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateX(-10px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    .status-icon { font-size: 14px; }
-    .done  { color: var(--primary); }
-    .wip   { color: var(--accent); }
-    .queue { color: var(--muted); }
-
-    /* ── Counter ── */
-    .eta-block {
-      display: flex; justify-content: center; gap: 24px;
-      margin-bottom: 40px;
-    }
-    .eta-unit {
-      text-align: center;
-      opacity: 0;
-      animation: fadeUp 0.5s ease 2.5s forwards;
-    }
-    .eta-num {
-      font-size: 2rem; font-weight: 800;
-      color: var(--primary);
-      font-variant-numeric: tabular-nums;
-      display: block;
-      line-height: 1;
-      text-shadow: var(--glow);
-    }
-    .eta-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px; color: var(--muted);
-      letter-spacing: 2px; text-transform: uppercase;
-      margin-top: 4px; display: block;
-    }
-    .eta-sep { color: var(--muted); font-size: 1.5rem; padding-top: 4px; }
-
-    /* ── CTA button ── */
-    .btn-notify {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 30px;
-      background: transparent;
-      border: 1px solid rgba(0,255,204,0.4);
-      color: var(--primary);
-      font-family: 'Space Mono', monospace;
-      font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-      cursor: pointer; border-radius: 2px;
-      position: relative; overflow: hidden;
-      transition: color 0.3s, border-color 0.3s, box-shadow 0.3s;
-      opacity: 0;
-      animation: fadeUp 0.5s ease 3s forwards;
-    }
-    .btn-notify::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: var(--primary);
-      transform: translateX(-101%);
-      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-      z-index: -1;
-    }
-    .btn-notify:hover { color: var(--bg); border-color: var(--primary); box-shadow: var(--glow); }
-    .btn-notify:hover::before { transform: translateX(0); }
-
-    /* ── Noise overlay ── */
     .noise {
-      position: fixed; inset: 0; z-index: 2; pointer-events: none;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: .03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
-
-    /* ── Glitch line ── */
     .glitch-line {
       position: fixed; z-index: 3; pointer-events: none;
       left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--primary), transparent);
-      opacity: 0;
-      animation: glitchScan 8s ease-in-out infinite;
+      opacity: 0; animation: glitchScan 9s ease-in-out infinite;
     }
     @keyframes glitchScan {
-      0%   { top: -2px; opacity: 0; }
-      5%   { opacity: 0.6; }
-      95%  { opacity: 0.6; }
-      100% { top: 100vh; opacity: 0; }
+      0%   { top: -2px; opacity: 0; } 4% { opacity: .6; }
+      96%  { opacity: .6; }           100% { top: 100dvh; opacity: 0; }
+    }
+
+    .orb { position: fixed; border-radius: 50%; filter: blur(70px); z-index: 0; animation: orbFloat linear infinite; }
+    .orb-1 { width: clamp(160px,40vw,420px); height: clamp(160px,40vw,420px); background: rgba(0,255,204,.08); top:-10%; left:-10%; animation-duration:25s; }
+    .orb-2 { width: clamp(120px,30vw,320px); height: clamp(120px,30vw,320px); background: rgba(255,51,102,.07); bottom:-5%; right:-5%; animation-duration:30s; animation-delay:-10s; }
+    .orb-3 { width: clamp(90px,20vw,220px);  height: clamp(90px,20vw,220px);  background: rgba(255,215,0,.06); top:40%; left:60%; animation-duration:20s; animation-delay:-5s; }
+    @keyframes orbFloat {
+      0%,100% { transform:translate(0,0) scale(1); }
+      33%     { transform:translate(30px,-25px) scale(1.08); }
+      66%     { transform:translate(-15px,15px) scale(.93); }
+    }
+
+    /* ══ CARD ══ */
+    .card {
+      position: relative; z-index: 10;
+      width: min(680px, 100%);
+      text-align: center;
+      padding: var(--card-py) var(--card-px);
+      background: rgba(5,10,20,.75);
+      border: 1px solid rgba(0,255,204,.15);
+      border-radius: 4px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 0 0 1px rgba(0,255,204,.05), inset 0 1px 0 rgba(255,255,255,.05);
+      animation: cardIn .9s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform:translateY(36px) scale(.97); }
+      to   { opacity:1; transform:none; }
+    }
+    .card::before, .card::after {
+      content:''; position:absolute;
+      width:clamp(14px,3vw,22px); height:clamp(14px,3vw,22px);
+      border-color:var(--primary); border-style:solid;
+    }
+    .card::before { top:-1px; left:-1px; border-width:2px 0 0 2px; }
+    .card::after  { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
+
+    /* ══ GEARS ══ */
+    .gear-wrap {
+      position:relative;
+      width:clamp(88px,22vw,130px); height:clamp(88px,22vw,130px);
+      margin:0 auto var(--gap-md);
+    }
+    .gear {
+      position:absolute; border-radius:50%;
+      border:3px solid var(--primary);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .gear svg { overflow:visible; width:100%; height:100%; }
+    .gear-big   { width:70%; height:70%; top:15%; left:4%;   animation:spinCW  4s linear infinite; }
+    .gear-small { width:40%; height:40%; top:0;   right:0;   animation:spinCCW 2.22s linear infinite; border-color:var(--secondary); }
+    .gear-tiny  { width:27%; height:27%; bottom:0; right:16%; animation:spinCW  1.5s linear infinite; border-color:var(--accent); }
+    @keyframes spinCW  { to { transform:rotate(360deg);  } }
+    @keyframes spinCCW { to { transform:rotate(-360deg); } }
+
+    /* ══ BADGE ══ */
+    .badge {
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:'Space Mono',monospace;
+      font-size:clamp(9px,2vw,11px); letter-spacing:3px; text-transform:uppercase;
+      color:var(--primary);
+      border:1px solid rgba(0,255,204,.3);
+      padding:6px 14px; border-radius:2px;
+      margin-bottom:var(--gap-sm);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--primary); animation:blink 1s step-end infinite; }
+    @keyframes blink { 50%{opacity:0;} }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,204,.3);} 50%{box-shadow:0 0 0 6px rgba(0,255,204,0);} }
+
+    /* ══ HEADING ══ */
+    h1 {
+      font-size:clamp(1.65rem,7vw,3.2rem);
+      font-weight:800; line-height:1.1;
+      letter-spacing:clamp(-.5px,-.02em,-1px);
+      margin-bottom:clamp(10px,3vw,18px);
+    }
+    .h1-line1 { color:#fff; display:block; }
+    .h1-line2 {
+      display:block;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    /* ══ DESC ══ */
+    .desc {
+      color:var(--muted);
+      font-size:clamp(11px,3vw,15px); line-height:1.75;
+      margin-bottom:var(--gap-md);
+      font-family:'Space Mono',monospace;
+    }
+    .desc span { color:var(--accent); }
+    @media (max-width:380px) { .desc br { display:none; } }
+
+    /* ══ PROGRESS ══ */
+    .progress-wrap { margin-bottom:var(--gap-md); text-align:left; }
+    .progress-label {
+      display:flex; justify-content:space-between;
+      font-family:'Space Mono',monospace;
+      font-size:clamp(9px,2vw,11px); color:var(--muted);
+      letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;
+    }
+    .progress-label .pct { color:var(--primary); font-weight:700; }
+    .progress-track { height:4px; background:rgba(255,255,255,.06); border-radius:2px; overflow:hidden; }
+    .progress-fill {
+      height:100%; width:0%;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      border-radius:2px; position:relative;
+      animation:fillBar 3s cubic-bezier(.4,0,.2,1) .8s forwards;
+    }
+    .progress-fill::after {
+      content:''; position:absolute; right:0; top:-4px;
+      width:12px; height:12px;
+      background:var(--primary); border-radius:50%;
+      box-shadow:0 0 12px var(--primary);
+    }
+    @keyframes fillBar { to { width:72%; } }
+
+    /* ══ STATUS LIST ══ */
+    .status-list { list-style:none; display:flex; flex-direction:column; gap:clamp(8px,2vw,12px); text-align:left; margin-bottom:var(--gap-md); }
+    .status-item {
+      display:flex; align-items:flex-start; gap:clamp(8px,2vw,12px);
+      font-family:'Space Mono',monospace;
+      font-size:clamp(10px,2.5vw,12px); color:var(--muted);
+      opacity:0; animation:fadeUp .5s ease forwards; line-height:1.5;
+    }
+    .status-item:nth-child(1){animation-delay:1.1s;}
+    .status-item:nth-child(2){animation-delay:1.4s;}
+    .status-item:nth-child(3){animation-delay:1.7s;}
+    .status-item:nth-child(4){animation-delay:2.0s;}
+    @keyframes fadeUp { from{opacity:0;transform:translateX(-8px);} to{opacity:1;transform:none;} }
+    .status-icon { flex-shrink:0; font-size:clamp(12px,3vw,14px); margin-top:1px; }
+    .done  { color:var(--primary); }
+    .wip   { color:var(--accent); }
+    .queue { color:var(--muted); }
+
+    /* ══ COUNTDOWN ══ */
+    .eta-block {
+      display:flex; justify-content:center; align-items:center;
+      gap:clamp(10px,4vw,24px); margin-bottom:var(--gap-md);
+    }
+    .eta-unit {
+      text-align:center; min-width:clamp(42px,12vw,72px);
+      opacity:0; animation:fadeUp .5s ease 2.4s forwards;
+    }
+    .eta-num {
+      font-size:clamp(1.4rem,7vw,2.4rem);
+      font-weight:800; color:var(--primary);
+      font-variant-numeric:tabular-nums;
+      display:block; line-height:1;
+      text-shadow:var(--glow);
+    }
+    .eta-label {
+      font-family:'Space Mono',monospace;
+      font-size:clamp(8px,2vw,10px); color:var(--muted);
+      letter-spacing:2px; text-transform:uppercase;
+      margin-top:4px; display:block;
+    }
+    .eta-sep { color:var(--muted); font-size:clamp(.9rem,4vw,1.6rem); opacity:.5; }
+
+    /* ══ BUTTON ══ */
+    .btn-notify {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; max-width:320px;
+      padding:clamp(12px,3vw,16px) clamp(20px,5vw,32px);
+      background:transparent;
+      border:1px solid rgba(0,255,204,.4);
+      color:var(--primary);
+      font-family:'Space Mono',monospace;
+      font-size:clamp(10px,2.5vw,12px); letter-spacing:2px; text-transform:uppercase;
+      cursor:pointer; border-radius:2px;
+      position:relative; overflow:hidden;
+      transition:color .3s,border-color .3s,box-shadow .3s;
+      opacity:0; animation:fadeUp .5s ease 2.9s forwards;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .btn-notify::before {
+      content:''; position:absolute; inset:0;
+      background:var(--primary);
+      transform:translateX(-101%);
+      transition:transform .4s cubic-bezier(.16,1,.3,1);
+      z-index:-1;
+    }
+    .btn-notify:hover,
+    .btn-notify:focus-visible { color:var(--bg); border-color:var(--primary); box-shadow:var(--glow); }
+    .btn-notify:hover::before,
+    .btn-notify:focus-visible::before { transform:translateX(0); }
+    .btn-notify:focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+    .btn-notify:active:not(:disabled) { transform:scale(.97); background:rgba(0,255,204,.12); }
+
+    /* ══ RESPONSIVE BREAKPOINTS ══ */
+
+    /* Very small phones */
+    @media (max-width:360px) {
+      .badge { letter-spacing:1.5px; padding:5px 10px; }
+      .eta-block { gap:8px; }
+      .eta-sep { display:none; }
+      .status-item em { display:none; }
+    }
+
+    /* Landscape phone: compress vertical spacing */
+    @media (max-height:500px) and (orientation:landscape) {
+      .gear-wrap { width:80px; height:80px; margin-bottom:14px; }
+      h1 { font-size:clamp(1.1rem,4vw,1.8rem); margin-bottom:8px; }
+      .desc { margin-bottom:12px; font-size:11px; }
+      .progress-wrap { margin-bottom:12px; }
+      .status-list { margin-bottom:12px; gap:6px; }
+      .eta-block { margin-bottom:12px; }
+      .card { padding-top:24px; padding-bottom:24px; }
+    }
+
+    /* Tablet and up */
+    @media (min-width:640px) {
+      .status-item { font-size:12px; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion:reduce) {
+      *, *::before, *::after {
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="grid-bg"></div>
-  <div class="scanlines"></div>
-  <div class="noise"></div>
-  <div class="glitch-line"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="glitch-line" aria-hidden="true"></div>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
 
-  <div class="card">
+  <main class="card" role="main">
 
     <!-- Gears -->
-    <div class="gear-wrap">
+    <div class="gear-wrap" aria-hidden="true">
       <div class="gear gear-big">
-        <svg width="90" height="90" viewBox="0 0 90 90">
-          <circle cx="45" cy="45" r="28" stroke="rgba(0,255,204,0.3)" stroke-width="1.5" fill="none"/>
-          <circle cx="45" cy="45" r="8" stroke="rgba(0,255,204,0.6)" stroke-width="1.5" fill="none"/>
-          <!-- teeth -->
-          <g stroke="rgba(0,255,204,0.7)" stroke-width="3" stroke-linecap="round">
-            <line x1="45" y1="10" x2="45" y2="4"/>
-            <line x1="45" y1="80" x2="45" y2="86"/>
-            <line x1="10" y1="45" x2="4" y2="45"/>
-            <line x1="80" y1="45" x2="86" y2="45"/>
-            <line x1="22" y1="22" x2="17" y2="17"/>
-            <line x1="68" y1="22" x2="73" y2="17"/>
-            <line x1="22" y1="68" x2="17" y2="73"/>
-            <line x1="68" y1="68" x2="73" y2="73"/>
+        <svg viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="28" stroke="rgba(0,255,204,.3)" stroke-width="1.5" fill="none"/>
+          <circle cx="45" cy="45" r="8"  stroke="rgba(0,255,204,.6)" stroke-width="1.5" fill="none"/>
+          <g stroke="rgba(0,255,204,.7)" stroke-width="3" stroke-linecap="round">
+            <line x1="45" y1="10" x2="45" y2="4"/>  <line x1="45" y1="80" x2="45" y2="86"/>
+            <line x1="10" y1="45" x2="4"  y2="45"/> <line x1="80" y1="45" x2="86" y2="45"/>
+            <line x1="22" y1="22" x2="17" y2="17"/> <line x1="68" y1="22" x2="73" y2="17"/>
+            <line x1="22" y1="68" x2="17" y2="73"/> <line x1="68" y1="68" x2="73" y2="73"/>
           </g>
         </svg>
       </div>
       <div class="gear gear-small">
-        <svg width="50" height="50" viewBox="0 0 50 50">
-          <circle cx="25" cy="25" r="14" stroke="rgba(255,51,102,0.4)" stroke-width="1" fill="none"/>
-          <circle cx="25" cy="25" r="5" stroke="rgba(255,51,102,0.7)" stroke-width="1.5" fill="none"/>
-          <g stroke="rgba(255,51,102,0.8)" stroke-width="2.5" stroke-linecap="round">
-            <line x1="25" y1="6" x2="25" y2="2"/>
-            <line x1="25" y1="44" x2="25" y2="48"/>
-            <line x1="6" y1="25" x2="2" y2="25"/>
-            <line x1="44" y1="25" x2="48" y2="25"/>
-            <line x1="12" y1="12" x2="9" y2="9"/>
-            <line x1="38" y1="12" x2="41" y2="9"/>
-            <line x1="12" y1="38" x2="9" y2="41"/>
-            <line x1="38" y1="38" x2="41" y2="41"/>
+        <svg viewBox="0 0 50 50">
+          <circle cx="25" cy="25" r="14" stroke="rgba(255,51,102,.4)" stroke-width="1"   fill="none"/>
+          <circle cx="25" cy="25" r="5"  stroke="rgba(255,51,102,.7)" stroke-width="1.5" fill="none"/>
+          <g stroke="rgba(255,51,102,.8)" stroke-width="2.5" stroke-linecap="round">
+            <line x1="25" y1="6"  x2="25" y2="2"/>  <line x1="25" y1="44" x2="25" y2="48"/>
+            <line x1="6"  y1="25" x2="2"  y2="25"/> <line x1="44" y1="25" x2="48" y2="25"/>
+            <line x1="12" y1="12" x2="9"  y2="9"/>  <line x1="38" y1="12" x2="41" y2="9"/>
+            <line x1="12" y1="38" x2="9"  y2="41"/> <line x1="38" y1="38" x2="41" y2="41"/>
           </g>
         </svg>
       </div>
       <div class="gear gear-tiny">
-        <svg width="34" height="34" viewBox="0 0 34 34">
-          <circle cx="17" cy="17" r="9" stroke="rgba(255,215,0,0.4)" stroke-width="1" fill="none"/>
-          <circle cx="17" cy="17" r="3" stroke="rgba(255,215,0,0.8)" stroke-width="1.5" fill="none"/>
-          <g stroke="rgba(255,215,0,0.9)" stroke-width="2" stroke-linecap="round">
-            <line x1="17" y1="4" x2="17" y2="1"/>
-            <line x1="17" y1="30" x2="17" y2="33"/>
-            <line x1="4" y1="17" x2="1" y2="17"/>
-            <line x1="30" y1="17" x2="33" y2="17"/>
-            <line x1="8" y1="8" x2="6" y2="6"/>
-            <line x1="26" y1="8" x2="28" y2="6"/>
-            <line x1="8" y1="26" x2="6" y2="28"/>
-            <line x1="26" y1="26" x2="28" y2="28"/>
+        <svg viewBox="0 0 34 34">
+          <circle cx="17" cy="17" r="9" stroke="rgba(255,215,0,.4)" stroke-width="1"   fill="none"/>
+          <circle cx="17" cy="17" r="3" stroke="rgba(255,215,0,.8)" stroke-width="1.5" fill="none"/>
+          <g stroke="rgba(255,215,0,.9)" stroke-width="2" stroke-linecap="round">
+            <line x1="17" y1="4"  x2="17" y2="1"/>  <line x1="17" y1="30" x2="17" y2="33"/>
+            <line x1="4"  y1="17" x2="1"  y2="17"/> <line x1="30" y1="17" x2="33" y2="17"/>
+            <line x1="8"  y1="8"  x2="6"  y2="6"/>  <line x1="26" y1="8"  x2="28" y2="6"/>
+            <line x1="8"  y1="26" x2="6"  y2="28"/> <line x1="26" y1="26" x2="28" y2="28"/>
           </g>
         </svg>
       </div>
     </div>
 
     <!-- Badge -->
-    <div class="badge">
-      <span class="badge-dot"></span>
+    <div class="badge" role="status">
+      <span class="badge-dot" aria-hidden="true"></span>
       Maintenance Mode
     </div>
 
-    <!-- Heading -->
+    <!-- Title -->
     <h1>
       <span class="h1-line1">Sedang Dalam</span>
       <span class="h1-line2">Perbaikan</span>
     </h1>
 
-    <!-- Description -->
+    <!-- Desc -->
     <p class="desc">
-      Kami sedang meningkatkan sistem untuk pengalaman yang <span>lebih baik</span>.<br/>
+      Kami sedang meningkatkan sistem untuk<br/>
+      pengalaman yang <span>lebih baik</span>.<br/>
       Mohon bersabar — sebentar lagi kami kembali! 🚀
     </p>
 
     <!-- Progress -->
-    <div class="progress-wrap">
+    <div class="progress-wrap" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
       <div class="progress-label">
         <span>Progress Perbaikan</span>
         <span class="pct" id="pctNum">0%</span>
       </div>
       <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-fill"></div>
       </div>
     </div>
 
-    <!-- Status list -->
+    <!-- Status -->
     <ul class="status-list">
-      <li class="status-item done">
-        <span class="status-icon">✓</span>
+      <li class="status-item">
+        <span class="status-icon done">✓</span>
         <span>Backup database selesai</span>
       </li>
-      <li class="status-item done">
-        <span class="status-icon">✓</span>
+      <li class="status-item">
+        <span class="status-icon done">✓</span>
         <span>Pembaruan keamanan terpasang</span>
       </li>
-      <li class="status-item wip">
-        <span class="status-icon">⟳</span>
-        <span>Optimasi performa server... <em>(sedang berjalan)</em></span>
+      <li class="status-item">
+        <span class="status-icon wip">⟳</span>
+        <span>Optimasi performa server… <em>(sedang berjalan)</em></span>
       </li>
-      <li class="status-item queue">
-        <span class="status-icon">○</span>
-        <span>Pengujian akhir & deployment</span>
+      <li class="status-item">
+        <span class="status-icon queue">○</span>
+        <span>Pengujian akhir &amp; deployment</span>
       </li>
     </ul>
 
-    <!-- ETA countdown -->
-    <div class="eta-block">
+    <!-- Countdown -->
+    <div class="eta-block" aria-label="Estimasi waktu selesai">
       <div class="eta-unit">
         <span class="eta-num" id="hrs">00</span>
         <span class="eta-label">Jam</span>
       </div>
-      <span class="eta-sep">:</span>
+      <span class="eta-sep" aria-hidden="true">:</span>
       <div class="eta-unit">
         <span class="eta-num" id="min">00</span>
         <span class="eta-label">Menit</span>
       </div>
-      <span class="eta-sep">:</span>
+      <span class="eta-sep" aria-hidden="true">:</span>
       <div class="eta-unit">
         <span class="eta-num" id="sec">00</span>
         <span class="eta-label">Detik</span>
@@ -448,65 +423,55 @@
     </div>
 
     <!-- CTA -->
-    <button class="btn-notify" onclick="notify()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="btn-notify" id="notifyBtn" onclick="handleNotify()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
       </svg>
       Beritahu Saya Saat Online
     </button>
 
-  </div>
+  </main>
 
   <script>
-    // ── Countdown 2 hours ──
+    /* ── Countdown ── */
     const target = Date.now() + 2 * 60 * 60 * 1000;
-
-    function pad(n){ return String(n).padStart(2,'0'); }
-
+    const pad = n => String(n).padStart(2,'0');
     function tick(){
-      const diff = Math.max(0, target - Date.now());
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('hrs').textContent = pad(h);
-      document.getElementById('min').textContent = pad(m);
-      document.getElementById('sec').textContent = pad(s);
+      const d = Math.max(0, target - Date.now());
+      document.getElementById('hrs').textContent = pad(Math.floor(d/3600000));
+      document.getElementById('min').textContent = pad(Math.floor((d%3600000)/60000));
+      document.getElementById('sec').textContent = pad(Math.floor((d%60000)/1000));
     }
     tick(); setInterval(tick, 1000);
 
-    // ── Progress number counter ──
-    let current = 0;
-    const final = 72;
-    const duration = 3000;
-    const startTime = performance.now() + 800;
+    /* ── Percentage counter ── */
+    const FINAL = 72, DUR = 3000, t0 = performance.now() + 800;
+    const pEl = document.getElementById('pctNum');
+    (function loop(now){
+      if(now < t0){ requestAnimationFrame(loop); return; }
+      const p = Math.min((now-t0)/DUR, 1);
+      pEl.textContent = Math.round((1-Math.pow(1-p,3))*FINAL)+'%';
+      if(p<1) requestAnimationFrame(loop);
+    })(performance.now());
 
-    function animPct(now){
-      if(now < startTime){ requestAnimationFrame(animPct); return; }
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      current = Math.round(eased * final);
-      document.getElementById('pctNum').textContent = current + '%';
-      if(progress < 1) requestAnimationFrame(animPct);
-    }
-    requestAnimationFrame(animPct);
-
-    // ── Notify button ──
-    function notify(){
-      const btn = document.querySelector('.btn-notify');
-      btn.textContent = '✓  Berhasil Didaftarkan!';
-      btn.style.background = 'rgba(0,255,204,0.1)';
-      btn.style.borderColor = 'var(--primary)';
-      btn.style.color = 'var(--primary)';
-      btn.style.boxShadow = '0 0 20px rgba(0,255,204,0.3)';
+    /* ── Notify ── */
+    function handleNotify(){
+      const btn = document.getElementById('notifyBtn');
+      btn.innerHTML = '✓&nbsp; Berhasil Didaftarkan!';
+      Object.assign(btn.style,{
+        background:'rgba(0,255,204,.1)',
+        borderColor:'var(--primary)',
+        color:'var(--primary)',
+        boxShadow:'0 0 20px rgba(0,255,204,.3)'
+      });
       btn.disabled = true;
     }
 
-    // ── Glitch line reset ──
+    /* ── Random glitch timing ── */
     const gl = document.querySelector('.glitch-line');
-    gl.addEventListener('animationiteration', () => {
-      gl.style.animationDuration = (6 + Math.random() * 6) + 's';
+    gl.addEventListener('animationiteration', ()=>{
+      gl.style.animationDuration = (6+Math.random()*7)+'s';
     });
   </script>
 </body>
