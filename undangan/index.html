@@ -133,7 +133,7 @@
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#lokasi">Lokasi</a></li>
       </ul>
-      <a href="#pendaftaran" class="nav-cta">
+      <a href="#lomba" class="nav-cta">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8H7v-2h4v2zm2-4H7v-2h6v2z"/></svg>
         Daftar Sekarang
       </a>
@@ -153,7 +153,7 @@
         </a>
       </li>
       <li>
-        <a href="#pendaftaran" onclick="toggleMenu()">
+        <a href="#lomba" onclick="toggleMenu()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8H7v-2h4v2zm2-4H7v-2h6v2z"/></svg>
           Pendaftaran
         </a>
@@ -195,7 +195,7 @@
       <p class="hero-sub">Pemuda Pemudi Siluang</p>
       <div class="hero-date">Sabtu, 12 Maret 2026 <span>•</span> Mushollah Sholihin Siluang</div>
       <div class="hero-buttons">
-        <a href="#pendaftaran" class="btn-primary ripple-container">
+        <a href="#lomba" class="btn-primary ripple-container">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V18H9v2h6v-2h-2v-2.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>
           Daftar Lomba
         </a>
@@ -243,7 +243,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="vertical-align:middle;margin-right:4px"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V18H9v2h6v-2h-2v-2.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>
         Kegiatan Lomba
       </div>
-      <h2 class="section-title reveal">Detail <span>Perlombaan</span></h2>
+      <h2 class="section-title reveal">Detail <span>Perlombaan</span> dan <span>Pendaftaran</span></h2>
       <div class="lomba-grid">
         <div class="lomba-card reveal">
           <div class="lomba-card-header gold-accent">
@@ -268,10 +268,11 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="vertical-align:middle;margin-right:4px"><path d="M20 6h-2.18c.07-.44.18-.86.18-1.3C18 2.55 15.86.42 13.25.42c-1.43 0-2.68.61-3.55 1.57L9 3l-.7-.97C7.44 1.03 6.19.42 4.75.42 2.14.42 0 2.55 0 5.14c0 .44.11.86.18 1.3H0v2h1l1 13h18l1-13h1V6h-2zm-6.75-3.58c1.34 0 2.5 1.16 2.5 2.28 0 .75-.17 1.3-.28 1.72H13V4.58c0-.99.35-2.16.25-2.16zM6.53 4.44c0-1.12 1.16-2.28 2.5-2.28.1 0 .25 1.17.25 2.16V6H7.81c-.11-.42-.28-.97-.28-1.56z"/></svg>
               Hadiah: Juara 1, 2, 3 + Piala + Sertifikat
             </div>
-            <button class="btn-daftar btn-daftar-gold ripple-container" onclick="showForm('kaligrafi')">
+            <a href="https://forms.gle/BpbxMeC8VEUeAAme9">
+            <button class="btn-daftar btn-daftar-gold ripple-container">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               Daftar Kaligrafi
-            </button>
+            </button></a>
           </div>
         </div>
         <div class="lomba-card reveal reveal-delay-2">
@@ -297,66 +298,17 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="vertical-align:middle;margin-right:4px"><path d="M20 6h-2.18c.07-.44.18-.86.18-1.3C18 2.55 15.86.42 13.25.42c-1.43 0-2.68.61-3.55 1.57L9 3l-.7-.97C7.44 1.03 6.19.42 4.75.42 2.14.42 0 2.55 0 5.14c0 .44.11.86.18 1.3H0v2h1l1 13h18l1-13h1V6h-2z"/></svg>
               Hadiah: Uang Tunai + Medali + Sertifikat
             </div>
-            <button class="btn-daftar btn-daftar-green ripple-container" onclick="showForm('cermat')">
+            <a href="https://forms.gle/yuAp2dLhQZ82pNvQ8">
+            <button class="btn-daftar btn-daftar-green ripple-container">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
               Daftar Cerdas Cermat
-            </button>
+            </button></a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== PENDAFTARAN ===== -->
-  <section id="pendaftaran">
-    <div class="section-inner">
-      <div class="section-tag reveal">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="vertical-align:middle;margin-right:4px"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-2 8H7v-2h4v2zm2-4H7v-2h6v2z"/></svg>
-        Formulir Pendaftaran
-      </div>
-      <h2 class="section-title reveal">Daftar <span>Sekarang</span></h2>
-      <div class="ornament-divider reveal">✦ ✦ ✦</div>
-      <br>
-      <div class="form-tabs reveal">
-        <button class="tab-btn active ripple-container" id="tab-kaligrafi" onclick="switchTab('kaligrafi')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.85 10.39l1.06-1.06-1.27-1.27-1.06 1.06-3.49-3.49 1.06-1.06-1.27-1.27-1.06 1.06L11.56 3l-1.27 1.27.84.84-7.44 7.44-.84-.84L1.58 12.98l1.36 1.36L2 15.28V19h3.72l.94-.94 1.36 1.36 1.27-1.27-.84-.84 7.44-7.44.84.84L17 9.44l-1.36-1.36.47-.47 3.49 3.49-.75.75 1.27 1.27 1.78-1.78-3.05-3.05z"/></svg>
-          Lomba Kaligrafi
-        </button>
-        <button class="tab-btn ripple-container" id="tab-cermat" onclick="switchTab('cermat')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
-          Cerdas Cermat
-        </button>
-      </div>
-      <div class="form-panel active" id="panel-kaligrafi">
-        <div class="form-frame-wrap">
-          <div class="form-frame-placeholder">
-            <div class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.85 10.39l1.06-1.06-1.27-1.27-1.06 1.06-3.49-3.49 1.06-1.06-1.27-1.27-1.06 1.06L11.56 3l-1.27 1.27.84.84-7.44 7.44-.84-.84L1.58 12.98l1.36 1.36L2 15.28V19h3.72l.94-.94 1.36 1.36 1.27-1.27-.84-.84 7.44-7.44.84.84L17 9.44l-1.36-1.36.47-.47 3.49 3.49-.75.75 1.27 1.27 1.78-1.78-3.05-3.05z"/></svg>
-            </div>
-            <h4>Form Pendaftaran Lomba Kaligrafi</h4>
-            <p>Klik tombol di bawah untuk mengisi formulir pendaftaran.</p>
-            <a href="https://forms.gle/PLACEHOLDER_KALIGRAFI" target="_blank" onclick="showToast('Membuka form pendaftaran Kaligrafi...','')">
-              Buka Form Pendaftaran →
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="form-panel" id="panel-cermat">
-        <div class="form-frame-wrap">
-          <div class="form-frame-placeholder">
-            <div class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
-            </div>
-            <h4>Form Pendaftaran Cerdas Cermat</h4>
-            <p>Klik tombol di bawah untuk mengisi formulir pendaftaran.</p>
-            <a href="https://forms.gle/PLACEHOLDER_CERMAT" target="_blank" onclick="showToast('Membuka form pendaftaran Cerdas Cermat...','')">
-              Buka Form Pendaftaran →
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ===== RUNDOWN ===== -->
   <section id="rundown">
