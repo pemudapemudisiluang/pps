@@ -1,1 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Semarak Ramadhan 1447H</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --gold:      #c9a84c;
+      --gold-light:#f0d080;
+      --gold-dark: #8a6820;
+      --cream:     #faf6ee;
+      --paper:     #f2ead8;
+      --ink:       #2a1f0e;
+      --ink-soft:  #6b5637;
+      --card-bg:   #fffdf7;
+      --shadow:    0 4px 24px rgba(42,31,14,.10);
+      --shadow-hover: 0 10px 36px rgba(42,31,14,.18);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--cream);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+    }
+
+    /* ── geometric background ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201,168,76,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 10%  90%, rgba(201,168,76,.10) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 90%  80%, rgba(201,168,76,.10) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* subtle pattern overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='.3' opacity='.2'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── page wrapper ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      padding: 48px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── crescent + star ornament ── */
+    .ornament {
+      font-size: 2.2rem;
+      letter-spacing: .2em;
+      color: var(--gold);
+      margin-bottom: 18px;
+      animation: fadeUp .7s .1s ease both;
+      text-shadow: 0 2px 12px rgba(201,168,76,.4);
+    }
+
+    /* ── avatar ── */
+    .avatar-wrap {
+      position: relative;
+      width: 116px;
+      height: 116px;
+      margin-bottom: 22px;
+      animation: fadeUp .7s .15s ease both;
+    }
+
+    .avatar-ring {
+      position: absolute; inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--gold) 0deg,
+        var(--gold-light) 90deg,
+        var(--gold) 180deg,
+        var(--gold-dark) 270deg,
+        var(--gold) 360deg
+      );
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar-ring::after {
+      content: '';
+      position: absolute; inset: 3px;
+      background: var(--cream);
+      border-radius: 50%;
+    }
+
+    .avatar {
+      position: relative;
+      z-index: 1;
+      width: 116px;
+      height: 116px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0d080 0%, #c9a84c 100%);
+    }
+
+    /* crescent-moon SVG as profile placeholder */
+    .avatar svg { width: 58px; height: 58px; }
+
+    /* ── headings ── */
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.45rem, 5vw, 1.75rem);
+      font-weight: 700;
+      text-align: center;
+      color: var(--ink);
+      line-height: 1.25;
+      letter-spacing: -.01em;
+      margin-bottom: 10px;
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    .title em {
+      display: block;
+      font-style: normal;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-align: center;
+      letter-spacing: .02em;
+      line-height: 1.5;
+      padding: 0 8px;
+      margin-bottom: 36px;
+      animation: fadeUp .7s .25s ease both;
+    }
+
+    /* ── divider ── */
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .divider span { font-size: .75rem; color: var(--gold); letter-spacing: .15em; white-space: nowrap; }
+
+    /* ── link cards ── */
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card-bg);
+      border: 1px solid rgba(201,168,76,.25);
+      border-radius: 16px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform .22s cubic-bezier(.34,1.56,.64,1),
+                  box-shadow .22s ease,
+                  border-color .22s ease;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(120deg, rgba(201,168,76,.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .link-card:hover::before { opacity: 1; }
+
+    .link-card:hover {
+      transform: translateY(-4px) scale(1.012);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(201,168,76,.55);
+    }
+
+    .link-card:active {
+      transform: translateY(-1px) scale(1.005);
+    }
+
+    /* staggered entrance */
+    .link-card:nth-child(1) { animation: fadeUp .6s .35s ease forwards; }
+    .link-card:nth-child(2) { animation: fadeUp .6s .45s ease forwards; }
+    .link-card:nth-child(3) { animation: fadeUp .6s .55s ease forwards; }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+    .card-icon.kaligrafi {
+      background: linear-gradient(135deg, #fef3c7, #fcd34d);
+    }
+    .card-icon.cermat {
+      background: linear-gradient(135deg, #d1fae5, #6ee7b7);
+    }
+
+    .card-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .card-title {
+      font-size: .92rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-desc {
+      font-size: .75rem;
+      color: var(--ink-soft);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-dots {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 4px;
+      opacity: .45;
+      flex-shrink: 0;
+      transition: opacity .2s;
+    }
+    .link-card:hover .card-dots { opacity: .85; }
+    .dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--ink-soft);
+    }
+
+    /* ── footer ── */
+    .footer {
+      margin-top: 44px;
+      text-align: center;
+      animation: fadeUp .7s .6s ease both;
+      opacity: 0;
+    }
+    .footer-ornament {
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: .3em;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .footer-text {
+      font-size: .72rem;
+      color: var(--ink-soft);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── responsive ── */
+    @media (min-width: 500px) {
+      .page { padding: 56px 24px 72px; }
+    }
+    @media (min-width: 768px) {
+      .page { padding: 64px 0 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- ornament -->
+  <div class="ornament">☽ ✦ ☾</div>
+
+  <!-- avatar -->
+  <div class="avatar-wrap">
+    <div class="avatar-ring"></div>
+    <div class="avatar">
+      <!-- mosque + crescent placeholder -->
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="20" r="14" fill="rgba(255,255,255,.25)"/>
+        <path d="M26 20 A14 14 0 0 1 40 6 A10 10 0 0 0 26 20Z" fill="white" opacity=".85"/>
+        <rect x="28" y="34" width="24" height="22" rx="3" fill="white" opacity=".9"/>
+        <rect x="36" y="42" width="8" height="14" rx="2" fill="rgba(201,168,76,.7)"/>
+        <path d="M24 34 Q40 26 56 34" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <rect x="18" y="56" width="44" height="4" rx="2" fill="white" opacity=".9"/>
+        <rect x="35" y="20" width="2" height="14" fill="white" opacity=".7"/>
+        <polygon points="36,18 40,13 44,18" fill="white" opacity=".85"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- title -->
+  <h1 class="title">
+    Semarak<br/>
+    <em>Ramadhan 1447H</em>
+  </h1>
+
+  <!-- subtitle -->
+  <p class="subtitle">Pemuda Pemudi Siluang &nbsp;·&nbsp; Mushollah Sholihin Siluang</p>
+
+  <!-- divider -->
+  <div class="divider"><span>✦ DAFTAR LOMBA ✦</span></div>
+
+  <!-- links -->
+  <div class="links">
+
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSctTCEGsk7NyU6srxAIQyud0c9v6Acriq3R5Qu88pCCXODWlw/viewform" class="link-card" onclick="handleClick(event, 'kaligrafi')">
+      <div class="card-icon kaligrafi">🖊️</div>
+      <div class="card-text">
+        <div class="card-title">Daftar Kaligrafi</div>
+        <div class="card-desc">Lomba Kaligrafi Indah Islam</div>
+      </div>
+      <div class="card-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </a>
+
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd4HvsO0LSwop69weYuRQvfXBkS9VLbebuSJFQ0DtDvD0IVnQ/viewform" class="link-card" onclick="handleClick(event, 'cermat')">
+      <div class="card-icon cermat">🧠</div>
+      <div class="card-text">
+        <div class="card-title">Daftar Cerdas Cermat</div>
+        <div class="card-desc">Lomba Cerdas Cermat Islami</div>
+      </div>
+      <div class="card-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    <span class="footer-ornament">✦ ✦ ✦</span>
+    <p class="footer-text">Ramadhan 1447 H &nbsp;|&nbsp; Siluang</p>
+  </div>
+
+</main>
+
+<script>
+  function handleClick(e, type) {
+    e.preventDefault();
+    const urls = {
+      kaligrafi: 'https://docs.google.com/forms/d/e/1FAIpQLSctTCEGsk7NyU6srxAIQyud0c9v6Acriq3R5Qu88pCCXODWlw/viewform',
+      cermat: 'https://docs.google.com/forms/d/e/1FAIpQLSd4HvsO0LSwop69weYuRQvfXBkS9VLbebuSJFQ0DtDvD0IVnQ/viewform'
+    };
+    // replace '#' with actual form URLs when ready
+    const url = urls[type];
+    if (url && url !== '#') {
+      window.open(url, '_blank');
+    } else {
+      // visual pulse feedback
+      const card = e.currentTarget;
+      card.style.transition = 'transform .1s';
+      card.style.transform = 'scale(.98)';
+      setTimeout(() => {
+        card.style.transition = 'transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease, border-color .22s ease';
+        card.style.transform = '';
+      }, 120);
+    }
+  }
+</script>
+
+</body>
+</html>
