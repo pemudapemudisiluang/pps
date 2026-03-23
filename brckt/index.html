@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBB SJL Season 2 — Bracket</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+
+/* ── ROOT VARS ───────────────────────────────────── */
+:root{
+  --bg:       #07080f;
+  --panel:    #0e1020;
+  --card:     #131628;
+  --border:   #1e2240;
+  --accent:   #5b2be8;
+  --neon:     #00cfff;
+  --gold:     #f5c400;
+  --win:      #00e87a;
+  --lose:     #ff3d5a;
+  --txt:      #d4d8f0;
+  --muted:    #4a5178;
+  --f-ui:     'Rajdhani', sans-serif;
+  --f-title:  'Orbitron', sans-serif;
+  /* bracket geometry */
+  --cw: 180px;   /* card width  */
+  --ch: 72px;    /* card height */
+  --hgap: 56px;  /* horizontal gap between rounds */
+}
+
+/* ── LAYOUT ──────────────────────────────────────── */
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:var(--f-ui);
+  display:flex;
+  flex-direction:column;
+}
+
+/* header strip */
+.hdr{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 20px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  gap:12px;
+}
+.hdr-title{
+  font-family:var(--f-title);
+  font-size:13px;
+  letter-spacing:2px;
+  color:#fff;
+  white-space:nowrap;
+}
+.hdr-title span{color:var(--neon)}
+.hdr-btns{display:flex;gap:8px;flex-shrink:0}
+.btn{
+  font-family:var(--f-ui);font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:6px 14px;border-radius:6px;border:none;cursor:pointer;
+  transition:.2s;
+}
+.btn-reset{background:rgba(255,61,90,.15);color:var(--lose);border:1px solid rgba(255,61,90,.35)}
+.btn-reset:hover{background:rgba(255,61,90,.28)}
+.btn-gen{background:rgba(91,43,232,.25);color:#a07fff;border:1px solid rgba(91,43,232,.5)}
+.btn-gen:hover{background:rgba(91,43,232,.4)}
+
+/* bracket scroll container */
+.stage{
+  flex:1;
+  overflow:auto;
+  position:relative;
+}
+/* SVG layer for connectors */
+#svg-layer{
+  position:absolute;
+  top:0;left:0;
+  pointer-events:none;
+  overflow:visible;
+}
+/* bracket flex container */
+#bracket{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  padding:32px 40px;
+  gap:0;
+  min-height:100%;
+}
+
+/* ── ROUND COLUMN ────────────────────────────────── */
+.round{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex-shrink:0;
+}
+.round-label{
+  font-family:var(--f-title);
+  font-size:9px;
+  letter-spacing:2.5px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:16px;
+  padding:4px 12px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.round-label.lbl-final{color:var(--gold);border-color:rgba(245,196,0,.35)}
+.round-label.lbl-champ{color:var(--neon);border-color:rgba(0,207,255,.4);animation:glowpulse 2s ease-in-out infinite}
+
+@keyframes glowpulse{
+  0%,100%{box-shadow:0 0 8px rgba(0,207,255,.2)}
+  50%{box-shadow:0 0 20px rgba(0,207,255,.5)}
+}
+
+.matches{
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── HORIZONTAL GAP BETWEEN ROUNDS ──────────────── */
+.hgap{width:var(--hgap);flex-shrink:0;position:relative;align-self:stretch}
+
+/* ── MATCH CARD ──────────────────────────────────── */
+.match{
+  width:var(--cw);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  position:relative;
+  transition:border-color .2s,box-shadow .2s;
+  flex-shrink:0;
+}
+.match:hover{border-color:rgba(91,43,232,.6);box-shadow:0 0 16px rgba(91,43,232,.2)}
+.match.has-winner::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(var(--win),var(--neon));
+  box-shadow:0 0 8px var(--win);
+}
+
+/* spacer between matches within a round */
+.msep{flex-shrink:0}
+
+/* ── TEAM ROW ────────────────────────────────────── */
+.trow{
+  display:flex;
+  align-items:center;
+  height:36px;
+  position:relative;
+}
+.trow+.trow{border-top:1px solid rgba(255,255,255,.05)}
+.trow.t-win{background:rgba(0,232,122,.08)}
+.trow.t-lose{background:rgba(255,61,90,.05)}
+.trow.t-bye{opacity:.35}
+
+/* small seed number */
+.tseed{
+  width:22px;min-width:22px;
+  font-size:9px;font-weight:700;color:var(--muted);
+  text-align:center;border-right:1px solid rgba(255,255,255,.05);
+  background:rgba(0,0,0,.2);height:100%;display:flex;align-items:center;justify-content:center;
+}
+
+/* team name input */
+.tname{
+  flex:1;min-width:0;
+  background:transparent;border:none;outline:none;
+  font-family:var(--f-ui);font-size:12px;font-weight:600;
+  color:var(--txt);letter-spacing:.4px;
+  padding:0 7px;cursor:pointer;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tname:focus{background:rgba(0,207,255,.07);color:var(--neon);border-radius:3px}
+.tname.w{color:var(--win);font-weight:700}
+.tname.bye{color:var(--muted);font-style:italic;cursor:default;font-size:11px}
+
+/* score input */
+.tscore{
+  width:32px;min-width:32px;
+  background:transparent;border:none;outline:none;
+  border-left:1px solid rgba(255,255,255,.05);
+  font-family:var(--f-title);font-size:13px;font-weight:700;
+  color:var(--muted);text-align:center;height:100%;
+  cursor:pointer;padding:0;
+}
+.tscore:focus{background:rgba(91,43,232,.15);color:#fff}
+.tscore.sw{color:var(--win)}
+.tscore.sl{color:var(--lose)}
+.tscore:disabled{opacity:.25;cursor:default}
+
+/* ── CHAMPION BOX ────────────────────────────────── */
+.champ-box{
+  width:calc(var(--cw) + 10px);
+  border:1px solid rgba(245,196,0,.4);
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(245,196,0,.06),rgba(91,43,232,.08));
+  padding:18px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  box-shadow:0 0 30px rgba(245,196,0,.1);
+  animation:glowgold 3s ease-in-out infinite;
+}
+@keyframes glowgold{
+  0%,100%{box-shadow:0 0 30px rgba(245,196,0,.1)}
+  50%{box-shadow:0 0 50px rgba(245,196,0,.25)}
+}
+.champ-crown{font-size:26px;filter:drop-shadow(0 0 10px gold);animation:crownbob 2s ease-in-out infinite}
+@keyframes crownbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.champ-lbl{font-family:var(--f-title);font-size:8px;letter-spacing:3px;color:var(--gold)}
+.champ-name{
+  font-family:var(--f-title);font-size:14px;font-weight:900;
+  color:#fff;text-align:center;letter-spacing:.5px;
+  text-shadow:0 0 18px rgba(245,196,0,.6);
+  min-height:20px;
+}
+.champ-sub{font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+
+/* ── TOAST ───────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:20px;right:20px;
+  background:var(--card);border:1px solid rgba(0,207,255,.4);
+  border-radius:7px;padding:10px 18px;
+  font-family:var(--f-ui);font-size:13px;color:var(--neon);
+  box-shadow:0 4px 20px rgba(0,207,255,.15);
+  transform:translateX(130%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:999;max-width:280px;
+}
+#toast.show{transform:translateX(0)}
+
+/* ── WINNER FLASH ────────────────────────────────── */
+@keyframes wflash{
+  0%{box-shadow:0 0 0 0 rgba(0,232,122,0)}
+  40%{box-shadow:0 0 28px 6px rgba(0,232,122,.5)}
+  100%{box-shadow:0 0 0 0 rgba(0,232,122,0)}
+}
+.wflash{animation:wflash .7s ease forwards}
+
+/* scrollbar */
+.stage::-webkit-scrollbar{width:6px;height:6px}
+.stage::-webkit-scrollbar-track{background:var(--bg)}
+.stage::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">MLBB &nbsp;<span>SJL Season 2</span>&nbsp; — Tournament Bracket</div>
+  <div class="hdr-btns">
+    <button class="btn btn-reset" onclick="resetBracket()">↺ Reset Skor</button>
+    <button class="btn btn-gen"   onclick="generateNew()">⟳ Generate Ulang</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <svg id="svg-layer"></svg>
+  <div id="bracket"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════════════════ */
+const TEAMS_DEFAULT = [
+  'Alter Ego','EVOS Legends','RRQ Hoshi','ONIC Esports',
+  'Bigetron Alpha','Aura Fire','GPX Basreng','Geek Fam',
+  'Team Flash','Rebellion Zion','Dewa United','Home United',
+  'Natus Vincere','Team Secret','Fnatic','Nexplay EVOS',
+  'Blacklist Int.','Smart Omega','RSG Philippines','Echo',
+  'AP Bren','Amplify','Team Havoc','Omega PH'
+];
+
+const ROUND_LABELS = ['Round 1','Round 2','Quarterfinal','Semifinal','Final'];
+const STORAGE_KEY  = 'mlbb_bracket_v3';
+
+/* ════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════ */
+// bracket[r][m] = { t1, t2, s1, s2, winner }
+// t1/t2 = string|null  (null = BYE / TBD)
+// s1/s2 = number|''
+// winner = 1|2|null
+let bracket = [];
+let teams   = [];
+
+/* ════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  const saved = tryLoad();
+  if (saved) {
+    bracket = saved.bracket;
+    teams   = saved.teams;
+  } else {
+    initBracket(TEAMS_DEFAULT.slice());
+  }
+  render();
+  setTimeout(drawLines, 50);
+});
+
+window.addEventListener('resize', () => {
+  clearTimeout(window._rszT);
+  window._rszT = setTimeout(drawLines, 80);
+});
+
+/* ════════════════════════════════════════════════════
+   BUILD BRACKET DATA
+════════════════════════════════════════════════════ */
+function initBracket(teamList) {
+  teams = teamList.slice();
+  // pad to next power-of-2
+  const n = nextPow2(teams.length);
+  const padded = teams.slice();
+  while (padded.length < n) padded.push(null); // null = BYE
+
+  bracket = [];
+
+  // Round 0: pair teams
+  const r0 = [];
+  for (let i = 0; i < n; i += 2) {
+    r0.push(makeMatch(padded[i], padded[i+1]));
+  }
+  bracket.push(r0);
+
+  // Subsequent rounds: empty placeholders
+  let prev = r0.length;
+  while (prev > 1) {
+    const cnt = prev / 2;
+    const r = [];
+    for (let i = 0; i < cnt; i++) r.push(makeMatch(null, null));
+    bracket.push(r);
+    prev = cnt;
+  }
+
+  // Auto-advance BYEs in round 0
+  r0.forEach((m, i) => {
+    if (!m.t1 && m.t2) { m.winner = 2; advance(0, i); }
+    if (m.t1 && !m.t2) { m.winner = 1; advance(0, i); }
+  });
+}
+
+function makeMatch(t1, t2) {
+  return { t1: t1||null, t2: t2||null, s1:'', s2:'', winner:null };
+}
+
+function nextPow2(n) { let p=1; while(p<n) p*=2; return p; }
+
+/* ════════════════════════════════════════════════════
+   ADVANCE WINNER
+════════════════════════════════════════════════════ */
+function advance(r, m) {
+  const match  = bracket[r][m];
+  const nextR  = r + 1;
+  if (nextR >= bracket.length) return; // Final done → champion handled in render
+
+  const nextM  = Math.floor(m / 2);
+  const slot   = (m % 2 === 0) ? 't1' : 't2';
+  const winner = match.winner === 1 ? match.t1 : match.t2;
+  const nextMatch = bracket[nextR][nextM];
+
+  nextMatch[slot] = winner;
+  // If the next match already had a winner but the winner team changed, invalidate it
+  if (nextMatch.winner) {
+    const prevWinner = nextMatch.winner === 1 ? nextMatch.t1 : nextMatch.t2;
+    // Re-check after updating
+    cascadeInvalidate(nextR, nextM);
+  }
+}
+
+// When a match result changes, clear downstream results
+function cascadeInvalidate(r, m) {
+  if (r >= bracket.length) return;
+  const match = bracket[r][m];
+  match.s1 = ''; match.s2 = ''; match.winner = null;
+  // clear the slot in next round
+  const nextR = r + 1;
+  if (nextR >= bracket.length) return;
+  const nextM = Math.floor(m / 2);
+  const slot  = (m % 2 === 0) ? 't1' : 't2';
+  bracket[nextR][nextM][slot] = null;
+  cascadeInvalidate(nextR, nextM);
+}
+
+/* ════════════════════════════════════════════════════
+   SCORE INPUT HANDLER
+════════════════════════════════════════════════════ */
+function onScore(r, m, side, val) {
+  const match = bracket[r][m];
+  const key   = side === 1 ? 's1' : 's2';
+  match[key]  = val === '' ? '' : parseInt(val)||0;
+
+  const s1 = match.s1 === '' ? null : Number(match.s1);
+  const s2 = match.s2 === '' ? null : Number(match.s2);
+
+  const oldWinner = match.winner;
+  match.winner = null;
+
+  if (s1 !== null && s2 !== null) {
+    if (s1 > s2) match.winner = 1;
+    else if (s2 > s1) match.winner = 2;
+    // tie = no winner
+  }
+
+  if (match.winner !== oldWinner) {
+    // Cascade: clear everything downstream first
+    const nextR = r + 1;
+    if (nextR < bracket.length) {
+      cascadeInvalidate(nextR, Math.floor(m/2));
+    }
+    // Then advance if we have a winner
+    if (match.winner) {
+      advance(r, m);
+      flashMatch(r+1, Math.floor(m/2));
+      const wName = match.winner===1 ? match.t1 : match.t2;
+      toast(`✅ ${wName} lanjut ke ronde berikutnya`);
+      // check champion
+      if (r === bracket.length - 1) toast(`🏆 JUARA: ${wName}!`);
+    }
+  }
+
+  save();
+  render();
+  setTimeout(drawLines, 30);
+}
+
+/* ════════════════════════════════════════════════════
+   TEAM NAME EDIT
+════════════════════════════════════════════════════ */
+function onNameEdit(r, m, side, val) {
+  const match = bracket[r][m];
+  const key   = side === 1 ? 't1' : 't2';
+  const old   = match[key];
+  match[key]  = val;
+  // propagate name change downstream
+  if (old) propagateName(old, val);
+  teams = teams.map(t => t === old ? val : t);
+  save();
+}
+
+function propagateName(oldName, newName) {
+  bracket.forEach(round => round.forEach(m => {
+    if (m.t1 === oldName) m.t1 = newName;
+    if (m.t2 === oldName) m.t2 = newName;
+  }));
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER
+════════════════════════════════════════════════════ */
+function render() {
+  const el = document.getElementById('bracket');
+  el.innerHTML = '';
+
+  const totalRounds = bracket.length;
+
+  bracket.forEach((round, r) => {
+    // ─ Round column ─
+    const col = document.createElement('div');
+    col.className = 'round';
+    col.id = `round-${r}`;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'round-label' + (r===totalRounds-1?' lbl-final':'');
+    lbl.textContent = ROUND_LABELS[r] || `Round ${r+1}`;
+    col.appendChild(lbl);
+
+    const matchesDiv = document.createElement('div');
+    matchesDiv.className = 'matches';
+
+    // vertical spacing: matches in round r are spaced out so they
+    // align with the center of their two "feeder" matches in round r-1
+    // spacing formula: sep = (2^r - 1) * (CH + unit_sep) where unit_sep is base sep in r0
+    const BASE_SEP = 10; // px between adjacent matches in round 0
+    const CH = 72;       // card height
+
+    round.forEach((match, m) => {
+      if (m > 0) {
+        const sep = document.createElement('div');
+        sep.className = 'msep';
+        // r=0: BASE_SEP, r=1: BASE_SEP + CH + BASE_SEP, etc.
+        const sepH = r === 0
+          ? BASE_SEP
+          : (Math.pow(2, r) - 1) * (CH + BASE_SEP) + BASE_SEP;
+        sep.style.height = sepH + 'px';
+        matchesDiv.appendChild(sep);
+      }
+      matchesDiv.appendChild(buildCard(match, r, m));
+    });
+
+    col.appendChild(matchesDiv);
+    el.appendChild(col);
+
+    // ─ Horizontal gap + connector space ─
+    if (r < totalRounds - 1) {
+      const gap = document.createElement('div');
+      gap.className = 'hgap';
+      gap.id = `hgap-${r}`;
+      el.appendChild(gap);
+    }
+  });
+
+  // ─ Champion column ─
+  const champCol = document.createElement('div');
+  champCol.className = 'round';
+
+  const champLbl = document.createElement('div');
+  champLbl.className = 'round-label lbl-champ';
+  champLbl.textContent = '🏆 JUARA';
+  champCol.appendChild(champLbl);
+
+  // Get champion from last round
+  const finalMatch = bracket[bracket.length-1][0];
+  const champName = finalMatch?.winner
+    ? (finalMatch.winner===1 ? finalMatch.t1 : finalMatch.t2)
+    : null;
+
+  const champBox = document.createElement('div');
+  champBox.className = 'champ-box';
+  champBox.innerHTML = `
+    <div class="champ-crown">👑</div>
+    <div class="champ-lbl">WINNER</div>
+    <div class="champ-name">${champName || ''}</div>
+    <div class="champ-sub">MLBB · SJL S2</div>
+  `;
+  champCol.appendChild(champBox);
+
+  // add left connector gap
+  const champGap = document.createElement('div');
+  champGap.className = 'hgap';
+  champGap.id = `hgap-${bracket.length-1}`;
+  el.appendChild(champGap);
+  el.appendChild(champCol);
+}
+
+/* ── Build a single match card ── */
+function buildCard(match, r, m) {
+  const card = document.createElement('div');
+  card.className = 'match' + (match.winner ? ' has-winner' : '');
+  card.id = `match-${r}-${m}`;
+
+  [1, 2].forEach(side => {
+    const isT1 = side === 1;
+    const tKey = isT1 ? 't1' : 't2';
+    const sKey = isT1 ? 's1' : 's2';
+    const name  = match[tKey];
+    const score = match[sKey];
+    const isBye = name === null;
+    const isWin = match.winner === side;
+    const isLos = match.winner && match.winner !== side;
+
+    if (!isT1) {
+      const div = document.createElement('div');
+      div.style.cssText='height:1px;background:rgba(255,255,255,.05)';
+      card.appendChild(div);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'trow' + (isWin?' t-win':isLos?' t-lose':isBye?' t-bye':'');
+
+    // seed
+    const seed = document.createElement('div');
+    seed.className = 'tseed';
+    seed.textContent = isBye ? '—' : (m * 2 + side);
+    row.appendChild(seed);
+
+    // name
+    const nameIn = document.createElement('input');
+    nameIn.type = 'text';
+    nameIn.className = 'tname' + (isWin?' w':isBye?' bye':'');
+    nameIn.value = isBye ? 'BYE' : (name || 'TBD');
+    nameIn.readOnly = isBye || !name;
+    nameIn.maxLength = 20;
+    nameIn.spellcheck = false;
+    if (!isBye && name) {
+      nameIn.addEventListener('blur', e => {
+        const v = e.target.value.trim();
+        if (v && v !== name) {
+          onNameEdit(r, m, side, v);
+          render();
+          setTimeout(drawLines, 30);
+        }
+      });
+      nameIn.addEventListener('keydown', e => { if(e.key==='Enter') nameIn.blur(); });
+    }
+    row.appendChild(nameIn);
+
+    // score
+    const scoreIn = document.createElement('input');
+    scoreIn.type = 'number';
+    scoreIn.min = '0'; scoreIn.max = '99';
+    scoreIn.className = 'tscore' + (isWin?' sw':isLos?' sl':'');
+    scoreIn.value = (isBye || !name) ? '' : (score === '' ? '' : score);
+    scoreIn.disabled = isBye || !name;
+    scoreIn.placeholder = (isBye || !name) ? '' : '—';
+    if (!isBye && name) {
+      scoreIn.addEventListener('input', e => onScore(r, m, side, e.target.value));
+    }
+    row.appendChild(scoreIn);
+
+    card.appendChild(row);
+  });
+
+  return card;
+}
+
+/* ════════════════════════════════════════════════════
+   DRAW SVG CONNECTOR LINES
+════════════════════════════════════════════════════ */
+function drawLines() {
+  const stage  = document.getElementById('stage');
+  const svgEl  = document.getElementById('svg-layer');
+  svgEl.innerHTML = '';
+
+  // size svg to bracket content
+  const bkt = document.getElementById('bracket');
+  svgEl.setAttribute('width',  bkt.scrollWidth);
+  svgEl.setAttribute('height', bkt.scrollHeight);
+  svgEl.style.width  = bkt.scrollWidth  + 'px';
+  svgEl.style.height = bkt.scrollHeight + 'px';
+
+  const bRect = bkt.getBoundingClientRect();
+
+  bracket.forEach((round, r) => {
+    const nextRound = bracket[r+1];
+    if (!nextRound) return;
+
+    round.forEach((match, m) => {
+      const nextM = Math.floor(m / 2);
+      const fromEl = document.getElementById(`match-${r}-${m}`);
+      const toEl   = document.getElementById(`match-${r+1}-${nextM}`);
+      if (!fromEl || !toEl) return;
+
+      const fR = fromEl.getBoundingClientRect();
+      const tR = toEl.getBoundingClientRect();
+
+      // positions relative to bracket div
+      const ox = fR.right  - bRect.left;
+      const oy = fR.top + fR.height/2 - bRect.top;
+      const ix = tR.left   - bRect.left;
+      const iy = tR.top + tR.height/2 - bRect.top;
+
+      const hasWinner = !!match.winner;
+      const color  = hasWinner ? 'rgba(0,207,255,0.7)' : 'rgba(91,43,232,0.35)';
+      const width  = hasWinner ? 1.5 : 1;
+
+      // mid X for the elbow
+      const mx = ox + (ix - ox) / 2;
+
+      // Draw: horizontal from match → midX, vertical midX, horizontal to next match
+      // For pair (0,1) → mid, the vertical connects oy of match[m*2] to oy of match[m*2+1]
+      // We only draw the vertical on the even index (first of the pair)
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      let d;
+      if (m % 2 === 0) {
+        // top of pair — draw H + V + nothing (V will be drawn with sibling)
+        const sibEl = document.getElementById(`match-${r}-${m+1}`);
+        if (sibEl) {
+          const sR = sibEl.getBoundingClientRect();
+          const sy = sR.top + sR.height/2 - bRect.top;
+          // H from this match to midX, V from oy to sy, H from midX to next
+          d = `M ${ox},${oy} H ${mx} V ${sy} M ${mx},${oy} H ${ix}`;
+
+          // Also draw sib horizontal
+          const sibPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+          const sibHasW = !!bracket[r][m+1]?.winner;
+          const sibColor = sibHasW ? 'rgba(0,207,255,0.7)' : 'rgba(91,43,232,0.35)';
+          sibPath.setAttribute('d', `M ${ox},${sy} H ${mx}`);
+          sibPath.setAttribute('fill','none');
+          sibPath.setAttribute('stroke', sibColor);
+          sibPath.setAttribute('stroke-width', sibHasW?1.5:1);
+          sibPath.setAttribute('stroke-linecap','round');
+          svgEl.appendChild(sibPath);
+        } else {
+          d = `M ${ox},${oy} H ${mx} V ${iy} H ${ix}`;
+        }
+      } else {
+        // bottom of pair — only draw H to midX (vertical already drawn by sibling above)
+        d = `M ${mx},${oy} H ${ix}`;
+      }
+
+      path.setAttribute('d', d);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke', color);
+      path.setAttribute('stroke-width', width);
+      path.setAttribute('stroke-linecap','round');
+      svgEl.appendChild(path);
+    });
+  });
+
+  // connector from Final to Champion box
+  const finalEl = document.getElementById(`match-${bracket.length-1}-0`);
+  const champEl = document.querySelector('.champ-box');
+  if (finalEl && champEl) {
+    const fR = finalEl.getBoundingClientRect();
+    const cR = champEl.getBoundingClientRect();
+    const ox = fR.right  - bRect.left;
+    const oy = fR.top + fR.height/2 - bRect.top;
+    const ix = cR.left   - bRect.left;
+    const iy = cR.top + cR.height/2 - bRect.top;
+    const finalMatch = bracket[bracket.length-1][0];
+    const hasWin = !!finalMatch?.winner;
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d', `M ${ox},${oy} H ${ix}`);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke', hasWin ? 'rgba(245,196,0,0.8)' : 'rgba(91,43,232,0.35)');
+    p.setAttribute('stroke-width', hasWin ? 2 : 1);
+    p.setAttribute('stroke-dasharray', hasWin ? '' : '4 4');
+    p.setAttribute('stroke-linecap','round');
+    svgEl.appendChild(p);
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   FLASH ANIMATION
+════════════════════════════════════════════════════ */
+function flashMatch(r, m) {
+  setTimeout(() => {
+    const el = document.getElementById(`match-${r}-${m}`);
+    if (!el) return;
+    el.classList.add('wflash');
+    setTimeout(() => el.classList.remove('wflash'), 800);
+  }, 80);
+}
+
+/* ════════════════════════════════════════════════════
+   RESET / GENERATE
+════════════════════════════════════════════════════ */
+function resetBracket() {
+  if (!confirm('Reset semua skor? Nama tim tetap ada.')) return;
+  // Preserve team names from round 0
+  const r0teams = bracket[0].flatMap(m => [m.t1, m.t2]).filter(Boolean);
+  initBracket(r0teams.length >= TEAMS_DEFAULT.length ? r0teams : teams);
+  save(); render(); setTimeout(drawLines,50);
+  toast('Skor direset ✓');
+}
+
+function generateNew() {
+  if (!confirm('Generate ulang bracket dengan nama tim default?')) return;
+  initBracket(TEAMS_DEFAULT.slice());
+  save(); render(); setTimeout(drawLines,50);
+  toast('Bracket baru dibuat ✓');
+}
+
+/* ════════════════════════════════════════════════════
+   STORAGE
+════════════════════════════════════════════════════ */
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({bracket, teams})); } catch(e){}
+}
+function tryLoad() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : null;
+  } catch(e){ return null; }
+}
+
+/* ════════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════════ */
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
