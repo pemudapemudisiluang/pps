@@ -6,774 +6,938 @@
 <title>MLBB SJL Season 2 — Bracket</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ───────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden}
+html,body{width:100%;height:100%;background:#07080f;color:#d4d8f0;font-family:'Rajdhani',sans-serif}
+body{overflow:hidden;display:flex;flex-direction:column}
 
-/* ── ROOT VARS ───────────────────────────────────── */
 :root{
-  --bg:       #07080f;
-  --panel:    #0e1020;
-  --card:     #131628;
-  --border:   #1e2240;
-  --accent:   #5b2be8;
-  --neon:     #00cfff;
-  --gold:     #f5c400;
-  --win:      #00e87a;
-  --lose:     #ff3d5a;
-  --txt:      #d4d8f0;
-  --muted:    #4a5178;
-  --f-ui:     'Rajdhani', sans-serif;
-  --f-title:  'Orbitron', sans-serif;
-  /* bracket geometry */
-  --cw: 180px;   /* card width  */
-  --ch: 72px;    /* card height */
-  --hgap: 56px;  /* horizontal gap between rounds */
+  --bg:#07080f;--panel:#0d0f1e;--card:#111526;--border:#1a1e38;
+  --accent:#5b2be8;--neon:#00cfff;--gold:#f5c400;
+  --win:#00e87a;--lose:#ff3d5a;--muted:#3d4466;--txt:#d4d8f0;
+  --cw:182px;--ch:72px;
 }
 
-/* ── LAYOUT ──────────────────────────────────────── */
-body{
-  background:var(--bg);
-  color:var(--txt);
-  font-family:var(--f-ui);
-  display:flex;
-  flex-direction:column;
+/* ── OVERLAY SCREENS ─────────────────────────────── */
+.screen{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%,rgba(91,43,232,.18),transparent 70%),var(--bg);
+  z-index:200;
 }
+.screen.hidden{display:none}
 
-/* header strip */
-.hdr{
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 20px;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
-  gap:12px;
+.box{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  padding:36px 40px;width:500px;max-width:92vw;
+  box-shadow:0 0 60px rgba(91,43,232,.2),0 20px 60px rgba(0,0,0,.55);
 }
-.hdr-title{
-  font-family:var(--f-title);
-  font-size:13px;
-  letter-spacing:2px;
-  color:#fff;
-  white-space:nowrap;
+.box-sm{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:28px 32px;width:360px;max-width:90vw;
+  box-shadow:0 0 40px rgba(91,43,232,.15),0 12px 40px rgba(0,0,0,.5);
 }
-.hdr-title span{color:var(--neon)}
-.hdr-btns{display:flex;gap:8px;flex-shrink:0}
+.chip{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;color:var(--neon);margin-bottom:6px}
+.ttl{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:24px}
+.ttl span{color:var(--gold)}
+.ttl-sm{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;color:#fff;letter-spacing:1px;margin-bottom:6px}
+.sub{font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+
+.field{margin-bottom:18px}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:8px}
+.lbl-row{display:flex;justify-content:space-between;align-items:center}
+.lbl-row span{color:var(--txt);font-weight:600;letter-spacing:0;font-size:12px;text-transform:none}
+
+.inp{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;
+  padding:9px 14px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s;
+}
+.inp:focus{border-color:var(--neon);box-shadow:0 0 14px rgba(0,207,255,.18)}
+.inp::placeholder{color:var(--muted)}
+.inp-num{width:88px;font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;text-align:center;padding:9px 6px}
+.inp-pw{letter-spacing:3px}
+
+.num-row{display:flex;gap:12px;align-items:center}
+.num-hint{font-size:12px;color:var(--muted);line-height:1.6}
+.num-hint strong{color:var(--neon)}
+
+/* teams grid */
+.tgrid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  max-height:240px;overflow-y:auto;padding-right:4px;
+}
+.tgrid::-webkit-scrollbar{width:4px}
+.tgrid::-webkit-scrollbar-track{background:var(--bg)}
+.tgrid::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+.t-wrap{display:flex;align-items:center;gap:6px}
+.t-num{font-size:10px;color:var(--muted);font-weight:700;width:20px;text-align:right;flex-shrink:0}
+.t-inp{
+  flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;
+  color:var(--txt);font-family:'Rajdhani',sans-serif;font-size:12.5px;font-weight:600;
+  padding:5px 9px;outline:none;transition:border-color .2s;
+}
+.t-inp:focus{border-color:rgba(91,43,232,.7);color:#fff}
+.t-inp::placeholder{color:var(--muted)}
+
+/* buttons */
+.btn-row{display:flex;gap:10px;margin-top:22px}
 .btn{
-  font-family:var(--f-ui);font-weight:700;font-size:12px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
   letter-spacing:1px;text-transform:uppercase;
-  padding:6px 14px;border-radius:6px;border:none;cursor:pointer;
-  transition:.2s;
+  padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:.18s;
 }
-.btn-reset{background:rgba(255,61,90,.15);color:var(--lose);border:1px solid rgba(255,61,90,.35)}
-.btn-reset:hover{background:rgba(255,61,90,.28)}
-.btn-gen{background:rgba(91,43,232,.25);color:#a07fff;border:1px solid rgba(91,43,232,.5)}
-.btn-gen:hover{background:rgba(91,43,232,.4)}
+.btn-primary{
+  flex:1;background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;
+  box-shadow:0 4px 18px rgba(91,43,232,.4);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 26px rgba(91,43,232,.55)}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--txt);border-color:rgba(255,255,255,.15)}
 
-/* bracket scroll container */
-.stage{
-  flex:1;
-  overflow:auto;
-  position:relative;
-}
-/* SVG layer for connectors */
-#svg-layer{
-  position:absolute;
-  top:0;left:0;
-  pointer-events:none;
-  overflow:visible;
-}
-/* bracket flex container */
-#bracket{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  padding:32px 40px;
-  gap:0;
-  min-height:100%;
-}
+.err{font-size:12px;color:var(--lose);margin-top:8px;min-height:16px}
 
-/* ── ROUND COLUMN ────────────────────────────────── */
-.round{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  flex-shrink:0;
+/* ── APP HEADER ──────────────────────────────────── */
+#app{display:none;flex-direction:column;width:100%;height:100%;overflow:hidden}
+.hdr{
+  flex-shrink:0;display:flex;align-items:center;padding:8px 16px;
+  background:var(--panel);border-bottom:1px solid var(--border);gap:10px;
 }
-.round-label{
-  font-family:var(--f-title);
-  font-size:9px;
-  letter-spacing:2.5px;
-  color:var(--muted);
-  text-transform:uppercase;
-  margin-bottom:16px;
-  padding:4px 12px;
-  border-radius:20px;
-  border:1px solid var(--border);
-  white-space:nowrap;
+.hdr-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:#fff;white-space:nowrap}
+.hdr-title span{color:var(--neon)}
+.hdr-info{font-size:12px;color:var(--muted);flex:1;padding-left:14px}
+.hdr-info strong{color:var(--txt)}
+.hdr-btns{display:flex;gap:7px;flex-shrink:0}
+.hbtn{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:5px 12px;border-radius:6px;border:none;cursor:pointer;transition:.18s;
 }
-.round-label.lbl-final{color:var(--gold);border-color:rgba(245,196,0,.35)}
-.round-label.lbl-champ{color:var(--neon);border-color:rgba(0,207,255,.4);animation:glowpulse 2s ease-in-out infinite}
+.hbtn-dim{background:rgba(91,43,232,.15);color:#9080cc;border:1px solid rgba(91,43,232,.3)}
+.hbtn-dim:hover{background:rgba(91,43,232,.28);color:#c0a8ff}
+.hbtn-red{background:rgba(255,61,90,.1);color:var(--lose);border:1px solid rgba(255,61,90,.25)}
+.hbtn-red:hover{background:rgba(255,61,90,.22)}
+.mode-badge{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;
+}
+.badge-admin{background:rgba(245,196,0,.12);color:var(--gold);border:1px solid rgba(245,196,0,.3)}
+.badge-view{background:rgba(0,207,255,.08);color:var(--neon);border:1px solid rgba(0,207,255,.2)}
 
-@keyframes glowpulse{
-  0%,100%{box-shadow:0 0 8px rgba(0,207,255,.2)}
-  50%{box-shadow:0 0 20px rgba(0,207,255,.5)}
-}
-
-.matches{
-  display:flex;
-  flex-direction:column;
-}
-
-/* ── HORIZONTAL GAP BETWEEN ROUNDS ──────────────── */
-.hgap{width:var(--hgap);flex-shrink:0;position:relative;align-self:stretch}
-
-/* ── MATCH CARD ──────────────────────────────────── */
-.match{
-  width:var(--cw);
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:8px;
-  overflow:hidden;
-  position:relative;
-  transition:border-color .2s,box-shadow .2s;
-  flex-shrink:0;
-}
-.match:hover{border-color:rgba(91,43,232,.6);box-shadow:0 0 16px rgba(91,43,232,.2)}
-.match.has-winner::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(var(--win),var(--neon));
-  box-shadow:0 0 8px var(--win);
-}
-
-/* spacer between matches within a round */
-.msep{flex-shrink:0}
-
-/* ── TEAM ROW ────────────────────────────────────── */
-.trow{
-  display:flex;
-  align-items:center;
-  height:36px;
-  position:relative;
-}
-.trow+.trow{border-top:1px solid rgba(255,255,255,.05)}
-.trow.t-win{background:rgba(0,232,122,.08)}
-.trow.t-lose{background:rgba(255,61,90,.05)}
-.trow.t-bye{opacity:.35}
-
-/* small seed number */
-.tseed{
-  width:22px;min-width:22px;
-  font-size:9px;font-weight:700;color:var(--muted);
-  text-align:center;border-right:1px solid rgba(255,255,255,.05);
-  background:rgba(0,0,0,.2);height:100%;display:flex;align-items:center;justify-content:center;
-}
-
-/* team name input */
-.tname{
-  flex:1;min-width:0;
-  background:transparent;border:none;outline:none;
-  font-family:var(--f-ui);font-size:12px;font-weight:600;
-  color:var(--txt);letter-spacing:.4px;
-  padding:0 7px;cursor:pointer;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.tname:focus{background:rgba(0,207,255,.07);color:var(--neon);border-radius:3px}
-.tname.w{color:var(--win);font-weight:700}
-.tname.bye{color:var(--muted);font-style:italic;cursor:default;font-size:11px}
-
-/* score input */
-.tscore{
-  width:32px;min-width:32px;
-  background:transparent;border:none;outline:none;
-  border-left:1px solid rgba(255,255,255,.05);
-  font-family:var(--f-title);font-size:13px;font-weight:700;
-  color:var(--muted);text-align:center;height:100%;
-  cursor:pointer;padding:0;
-}
-.tscore:focus{background:rgba(91,43,232,.15);color:#fff}
-.tscore.sw{color:var(--win)}
-.tscore.sl{color:var(--lose)}
-.tscore:disabled{opacity:.25;cursor:default}
-
-/* ── CHAMPION BOX ────────────────────────────────── */
-.champ-box{
-  width:calc(var(--cw) + 10px);
-  border:1px solid rgba(245,196,0,.4);
-  border-radius:12px;
-  background:linear-gradient(135deg,rgba(245,196,0,.06),rgba(91,43,232,.08));
-  padding:18px 14px;
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  box-shadow:0 0 30px rgba(245,196,0,.1);
-  animation:glowgold 3s ease-in-out infinite;
-}
-@keyframes glowgold{
-  0%,100%{box-shadow:0 0 30px rgba(245,196,0,.1)}
-  50%{box-shadow:0 0 50px rgba(245,196,0,.25)}
-}
-.champ-crown{font-size:26px;filter:drop-shadow(0 0 10px gold);animation:crownbob 2s ease-in-out infinite}
-@keyframes crownbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.champ-lbl{font-family:var(--f-title);font-size:8px;letter-spacing:3px;color:var(--gold)}
-.champ-name{
-  font-family:var(--f-title);font-size:14px;font-weight:900;
-  color:#fff;text-align:center;letter-spacing:.5px;
-  text-shadow:0 0 18px rgba(245,196,0,.6);
-  min-height:20px;
-}
-.champ-sub{font-size:9px;letter-spacing:1.5px;color:var(--muted)}
-
-/* ── TOAST ───────────────────────────────────────── */
-#toast{
-  position:fixed;bottom:20px;right:20px;
-  background:var(--card);border:1px solid rgba(0,207,255,.4);
-  border-radius:7px;padding:10px 18px;
-  font-family:var(--f-ui);font-size:13px;color:var(--neon);
-  box-shadow:0 4px 20px rgba(0,207,255,.15);
-  transform:translateX(130%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  z-index:999;max-width:280px;
-}
-#toast.show{transform:translateX(0)}
-
-/* ── WINNER FLASH ────────────────────────────────── */
-@keyframes wflash{
-  0%{box-shadow:0 0 0 0 rgba(0,232,122,0)}
-  40%{box-shadow:0 0 28px 6px rgba(0,232,122,.5)}
-  100%{box-shadow:0 0 0 0 rgba(0,232,122,0)}
-}
-.wflash{animation:wflash .7s ease forwards}
-
-/* scrollbar */
+/* ── STAGE ───────────────────────────────────────── */
+.stage{flex:1;overflow:auto;position:relative}
 .stage::-webkit-scrollbar{width:6px;height:6px}
 .stage::-webkit-scrollbar-track{background:var(--bg)}
 .stage::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+#svg-layer{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+#bracket{
+  position:relative;display:inline-flex;align-items:flex-start;
+  padding:32px 40px 40px;gap:0;
+}
+
+/* ── ROUND ───────────────────────────────────────── */
+.round{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.rlbl{
+  font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:14px;padding:4px 12px;
+  border-radius:20px;border:1px solid var(--border);white-space:nowrap;flex-shrink:0;
+}
+.rlbl.final{color:var(--gold);border-color:rgba(245,196,0,.3)}
+.rlbl.champ{color:var(--neon);border-color:rgba(0,207,255,.35);animation:gp 2.5s ease-in-out infinite}
+@keyframes gp{0%,100%{box-shadow:0 0 6px rgba(0,207,255,.1)}50%{box-shadow:0 0 18px rgba(0,207,255,.35)}}
+
+.matches{display:flex;flex-direction:column;flex-shrink:0}
+.msep{flex-shrink:0}
+.hgap{flex-shrink:0;width:54px;align-self:stretch;position:relative}
+
+/* ── MATCH CARD ──────────────────────────────────── */
+.match{
+  width:var(--cw);background:var(--card);
+  border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;flex-shrink:0;
+  transition:border-color .2s,box-shadow .2s;
+}
+.match:hover{border-color:rgba(91,43,232,.5);box-shadow:0 0 12px rgba(91,43,232,.15)}
+.match.hw::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(var(--win),var(--neon));box-shadow:0 0 8px var(--win);border-radius:8px 0 0 8px;
+}
+@keyframes wf{0%{box-shadow:0 0 0 0 rgba(0,232,122,0)}45%{box-shadow:0 0 22px 4px rgba(0,232,122,.45)}100%{box-shadow:0 0 0 0 rgba(0,232,122,0)}}
+.wflash{animation:wf .65s ease forwards}
+
+/* ── TEAM ROW ────────────────────────────────────── */
+.trow{display:flex;align-items:center;height:36px;position:relative}
+.trow+.trow{border-top:1px solid rgba(255,255,255,.04)}
+.trow.tw{background:rgba(0,232,122,.07)}
+.trow.tl{background:rgba(255,61,90,.05)}
+.trow.tb{opacity:.28}
+.tseed{
+  width:22px;min-width:22px;font-size:9px;font-weight:700;color:var(--muted);
+  text-align:center;border-right:1px solid rgba(255,255,255,.04);
+  background:rgba(0,0,0,.15);height:100%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.tname{
+  flex:1;min-width:0;background:transparent;border:none;outline:none;
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;
+  color:var(--txt);letter-spacing:.3px;padding:0 7px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tname.editable{cursor:pointer}
+.tname.editable:focus{background:rgba(0,207,255,.07);color:var(--neon);border-radius:3px}
+.tname.ew{color:var(--win);font-weight:700}
+.tname.dim{color:var(--muted);font-style:italic;font-size:11px}
+.tscore{
+  width:30px;min-width:30px;background:transparent;border:none;outline:none;
+  border-left:1px solid rgba(255,255,255,.04);
+  font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;
+  color:var(--muted);text-align:center;height:100%;padding:0;
+}
+.tscore.editable{cursor:pointer}
+.tscore.editable:focus{background:rgba(91,43,232,.14);color:#fff}
+.tscore.sw{color:var(--win)}
+.tscore.sl{color:var(--lose)}
+
+/* ── CHAMPION BOX ────────────────────────────────── */
+.cbox{
+  width:calc(var(--cw) + 14px);border:1px solid rgba(245,196,0,.35);border-radius:12px;
+  background:linear-gradient(135deg,rgba(245,196,0,.05),rgba(91,43,232,.08));
+  padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:5px;
+  animation:cg 3s ease-in-out infinite;
+}
+@keyframes cg{0%,100%{box-shadow:0 0 24px rgba(245,196,0,.08)}50%{box-shadow:0 0 44px rgba(245,196,0,.22)}}
+.ccrown{font-size:24px;filter:drop-shadow(0 0 10px gold);animation:cb 2s ease-in-out infinite}
+@keyframes cb{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.clbl{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:3px;color:var(--gold)}
+.cname{
+  font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;
+  color:#fff;text-align:center;text-shadow:0 0 14px rgba(245,196,0,.5);min-height:18px;
+}
+.csub{font-size:9px;letter-spacing:1.5px;color:var(--muted)}
+
+/* ── TOAST ───────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:16px;right:16px;background:var(--card);
+  border:1px solid rgba(0,207,255,.4);border-radius:7px;padding:8px 15px;
+  font-size:13px;color:var(--neon);box-shadow:0 4px 16px rgba(0,207,255,.12);
+  transform:translateX(130%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:999;max-width:260px;
+}
+#toast.show{transform:translateX(0)}
 </style>
 </head>
 <body>
 
-<div class="hdr">
-  <div class="hdr-title">MLBB &nbsp;<span>SJL Season 2</span>&nbsp; — Tournament Bracket</div>
-  <div class="hdr-btns">
-    <button class="btn btn-reset" onclick="resetBracket()">↺ Reset Skor</button>
-    <button class="btn btn-gen"   onclick="generateNew()">⟳ Generate Ulang</button>
+<!-- ══ LOGIN SCREEN ══════════════════════════════ -->
+<div class="screen" id="scr-login">
+  <div class="box-sm">
+    <div class="chip">MLBB · SJL SEASON 2</div>
+    <div class="ttl-sm">Akses Bracket</div>
+    <div class="sub">Masuk sebagai admin untuk edit bracket, atau lanjut sebagai penonton.</div>
+    <div class="field">
+      <label class="lbl">Password Admin</label>
+      <input class="inp inp-pw" type="password" id="pw-input" placeholder="••••••••" maxlength="32">
+      <div class="err" id="pw-err"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="enterViewer()">👁 Lihat Saja</button>
+      <button class="btn btn-primary" onclick="tryLogin()">🔑 Masuk Admin</button>
+    </div>
   </div>
 </div>
 
-<div class="stage" id="stage">
-  <svg id="svg-layer"></svg>
-  <div id="bracket"></div>
+<!-- ══ SETUP SCREEN (admin only) ════════════════ -->
+<div class="screen hidden" id="scr-setup">
+  <div class="box">
+    <div class="chip">ADMIN · MLBB SJL S2</div>
+    <div class="ttl">Setup <span>Bracket</span></div>
+    <div class="field">
+      <label class="lbl">Jumlah Tim</label>
+      <div class="num-row">
+        <input type="number" class="inp inp-num" id="team-count" value="8" min="2" max="128">
+        <div class="num-hint">
+          Masukkan jumlah tim (2–128).<br>
+          Tim tanpa lawan otomatis <strong>BYE</strong>.
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="lbl-row">
+        <span class="lbl" style="margin:0">Nama Tim</span>
+        <span id="name-cnt"></span>
+      </div>
+      <div style="height:8px"></div>
+      <div class="tgrid" id="tgrid"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="logout()">← Keluar</button>
+      <button class="btn btn-primary" onclick="doGenerate()">Generate Bracket →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══════════════════════════════════════ -->
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-title">MLBB <span>SJL S2</span></div>
+    <div class="hdr-info" id="hdr-info"></div>
+    <div class="hdr-btns" id="hdr-btns"></div>
+  </div>
+  <div class="stage" id="stage">
+    <svg id="svg-layer"></svg>
+    <div id="bracket"></div>
+  </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
    CONFIG
-════════════════════════════════════════════════════ */
-const TEAMS_DEFAULT = [
-  'Alter Ego','EVOS Legends','RRQ Hoshi','ONIC Esports',
-  'Bigetron Alpha','Aura Fire','GPX Basreng','Geek Fam',
-  'Team Flash','Rebellion Zion','Dewa United','Home United',
-  'Natus Vincere','Team Secret','Fnatic','Nexplay EVOS',
-  'Blacklist Int.','Smart Omega','RSG Philippines','Echo',
-  'AP Bren','Amplify','Team Havoc','Omega PH'
-];
+═══════════════════════════════════════════════════ */
+const ADMIN_PASSWORD = 'admin123';   // ← ganti sesuai keinginan
+const STORAGE_KEY    = 'mlbb_v5';
 
-const ROUND_LABELS = ['Round 1','Round 2','Quarterfinal','Semifinal','Final'];
-const STORAGE_KEY  = 'mlbb_bracket_v3';
-
-/* ════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
    STATE
-════════════════════════════════════════════════════ */
-// bracket[r][m] = { t1, t2, s1, s2, winner }
-// t1/t2 = string|null  (null = BYE / TBD)
-// s1/s2 = number|''
-// winner = 1|2|null
-let bracket = [];
-let teams   = [];
+═══════════════════════════════════════════════════ */
+let isAdmin   = false;
+let bracket   = [];   // bracket[r][m] = {t1,t2,s1,s2,winner}
+let teamNames = [];
+const BASE_SEP = 10;
+const CH       = 72;
 
-/* ════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════ */
-window.addEventListener('load', () => {
-  const saved = tryLoad();
-  if (saved) {
-    bracket = saved.bracket;
-    teams   = saved.teams;
+/* ═══════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════ */
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryLogin();
+});
+
+function tryLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if(pw === ADMIN_PASSWORD) {
+    isAdmin = true;
+    document.getElementById('pw-err').textContent = '';
+    document.getElementById('pw-input').value = '';
+    // Check if saved bracket exists
+    const saved = tryLoad();
+    if(saved) {
+      bracket = saved.bracket; teamNames = saved.teams;
+      showApp();
+    } else {
+      showSetup();
+    }
   } else {
-    initBracket(TEAMS_DEFAULT.slice());
+    document.getElementById('pw-err').textContent = 'Password salah.';
+    document.getElementById('pw-input').select();
   }
-  render();
-  setTimeout(drawLines, 50);
+}
+
+function enterViewer() {
+  isAdmin = false;
+  const saved = tryLoad();
+  if(saved) {
+    bracket = saved.bracket; teamNames = saved.teams;
+    showApp();
+  } else {
+    document.getElementById('pw-err').textContent = 'Belum ada bracket. Hubungi admin.';
+  }
+}
+
+function logout() {
+  isAdmin = false;
+  hide('scr-setup'); hide('app');
+  show('scr-login');
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-err').textContent = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   SETUP
+═══════════════════════════════════════════════════ */
+function defaultName(i) {
+  // Supports 0–701: A–Z, AA–AZ, BA–BZ, ...
+  const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(i < 26) return `Team ${L[i]}`;
+  const hi = Math.floor(i / 26) - 1;
+  const lo = i % 26;
+  return `Team ${L[hi]}${L[lo]}`;
+}
+
+function buildNameInputs(n) {
+  const grid = document.getElementById('tgrid');
+  const existing = [...grid.querySelectorAll('.t-inp')].map(el => el.value);
+  grid.innerHTML = '';
+  document.getElementById('name-cnt').textContent = `${n} tim`;
+  for(let i = 0; i < n; i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 't-wrap';
+    const num = document.createElement('span');
+    num.className = 't-num';
+    num.textContent = (i+1) + '.';
+    const inp = document.createElement('input');
+    inp.className = 't-inp'; inp.type = 'text'; inp.maxLength = 24;
+    inp.placeholder = `Tim ${i+1}`;
+    inp.value = (existing[i] !== undefined && existing[i] !== '') ? existing[i] : defaultName(i);
+    wrap.appendChild(num);
+    wrap.appendChild(inp);
+    grid.appendChild(wrap);
+  }
+}
+
+document.getElementById('team-count').addEventListener('input', e => {
+  let v = parseInt(e.target.value) || 2;
+  v = Math.max(2, Math.min(128, v));
+  buildNameInputs(v);
 });
 
-window.addEventListener('resize', () => {
-  clearTimeout(window._rszT);
-  window._rszT = setTimeout(drawLines, 80);
-});
+buildNameInputs(8);
 
-/* ════════════════════════════════════════════════════
-   BUILD BRACKET DATA
-════════════════════════════════════════════════════ */
-function initBracket(teamList) {
-  teams = teamList.slice();
-  // pad to next power-of-2
-  const n = nextPow2(teams.length);
-  const padded = teams.slice();
-  while (padded.length < n) padded.push(null); // null = BYE
+function showSetup() {
+  hide('scr-login'); hide('app');
+  show('scr-setup');
+  // Sync existing teams if any
+  if(teamNames.length > 0) {
+    document.getElementById('team-count').value = teamNames.length;
+    buildNameInputs(teamNames.length);
+    const inputs = document.querySelectorAll('#tgrid .t-inp');
+    teamNames.forEach((t,i) => { if(inputs[i]) inputs[i].value = t; });
+  }
+}
+
+function doGenerate() {
+  const inputs = [...document.querySelectorAll('#tgrid .t-inp')];
+  const names  = inputs.map((el,i) => el.value.trim() || defaultName(i));
+  initBracket(names);
+  showApp();
+}
+
+/* ═══════════════════════════════════════════════════
+   BRACKET INIT
+═══════════════════════════════════════════════════ */
+function nextPow2(n) { let p=1; while(p<n) p*=2; return p; }
+
+function initBracket(names) {
+  teamNames = names.slice();
+  const slots = nextPow2(teamNames.length);
+  const seeded = teamNames.slice();
+  while(seeded.length < slots) seeded.push(null);
 
   bracket = [];
 
-  // Round 0: pair teams
+  // Round 0
   const r0 = [];
-  for (let i = 0; i < n; i += 2) {
-    r0.push(makeMatch(padded[i], padded[i+1]));
-  }
+  for(let i = 0; i < slots; i += 2)
+    r0.push(nm(seeded[i], seeded[i+1]));
   bracket.push(r0);
 
-  // Subsequent rounds: empty placeholders
+  // Subsequent rounds
   let prev = r0.length;
-  while (prev > 1) {
-    const cnt = prev / 2;
-    const r = [];
-    for (let i = 0; i < cnt; i++) r.push(makeMatch(null, null));
-    bracket.push(r);
+  while(prev > 1) {
+    const cnt = Math.floor(prev / 2);
+    bracket.push(Array.from({length:cnt}, () => nm(null,null)));
     prev = cnt;
   }
 
   // Auto-advance BYEs in round 0
-  r0.forEach((m, i) => {
-    if (!m.t1 && m.t2) { m.winner = 2; advance(0, i); }
-    if (m.t1 && !m.t2) { m.winner = 1; advance(0, i); }
+  r0.forEach((m,i) => {
+    if(m.t1 && !m.t2)       { m.winner=1; m.isBye=true; doAdvance(0,i); }
+    else if(!m.t1 && m.t2)  { m.winner=2; m.isBye=true; doAdvance(0,i); }
   });
+  // Check all later rounds — BYE may cascade (e.g. 3 teams: QF has lone team → auto to SF)
+  for(let r=1; r<bracket.length; r++){
+    bracket[r].forEach((_,i) => checkAndAutoAdvance(r,i));
+  }
+
+  save();
 }
 
-function makeMatch(t1, t2) {
-  return { t1: t1||null, t2: t2||null, s1:'', s2:'', winner:null };
+function nm(t1,t2){ return {t1:t1||null,t2:t2||null,s1:'',s2:'',winner:null,isBye:false}; }
+
+/* ═══════════════════════════════════════════════════
+   ADVANCE / CASCADE
+═══════════════════════════════════════════════════ */
+
+// Place the winner of match [r][m] into the correct slot of the next round.
+// Then check if that next match now has only ONE team (the other slot is null) —
+// if so, auto-advance that lone team as a BYE winner, recursively.
+function doAdvance(r, m) {
+  const match = bracket[r][m];
+  const nextR = r + 1;
+  if(nextR >= bracket.length) return; // Final done, champion shown in render
+  const nextM = Math.floor(m / 2);
+  const slot  = m % 2 === 0 ? 't1' : 't2';
+  bracket[nextR][nextM][slot] = match.winner === 1 ? match.t1 : match.t2;
+
+  // After placing, check if the receiving match now has exactly one team
+  checkAndAutoAdvance(nextR, nextM);
 }
 
-function nextPow2(n) { let p=1; while(p<n) p*=2; return p; }
+// If a match has one real team and the other slot is null, auto-advance the real team.
+function checkAndAutoAdvance(r, m) {
+  const match = bracket[r][m];
+  // Already decided — nothing to do
+  if(match.winner) return;
 
-/* ════════════════════════════════════════════════════
-   ADVANCE WINNER
-════════════════════════════════════════════════════ */
-function advance(r, m) {
-  const match  = bracket[r][m];
-  const nextR  = r + 1;
-  if (nextR >= bracket.length) return; // Final done → champion handled in render
+  const has1 = !!match.t1;
+  const has2 = !!match.t2;
 
-  const nextM  = Math.floor(m / 2);
-  const slot   = (m % 2 === 0) ? 't1' : 't2';
-  const winner = match.winner === 1 ? match.t1 : match.t2;
-  const nextMatch = bracket[nextR][nextM];
+  if(has1 && !has2) {
+    match.winner = 1;
+    match.isBye  = true; // mark so UI can show "BYE"
+    doAdvance(r, m);
+  } else if(!has1 && has2) {
+    match.winner = 2;
+    match.isBye  = true;
+    doAdvance(r, m);
+  }
+  // Both present or both absent → nothing to auto-advance
+}
 
-  nextMatch[slot] = winner;
-  // If the next match already had a winner but the winner team changed, invalidate it
-  if (nextMatch.winner) {
-    const prevWinner = nextMatch.winner === 1 ? nextMatch.t1 : nextMatch.t2;
-    // Re-check after updating
-    cascadeInvalidate(nextR, nextM);
+function cascadeFrom(r, m) {
+  if(r >= bracket.length) return;
+  const match = bracket[r][m];
+  match.s1=''; match.s2=''; match.winner=null; match.isBye=false;
+  const nextR = r+1;
+  if(nextR < bracket.length) {
+    const slot = m%2===0 ? 't1' : 't2';
+    bracket[nextR][Math.floor(m/2)][slot] = null;
+    cascadeFrom(nextR, Math.floor(m/2));
   }
 }
 
-// When a match result changes, clear downstream results
-function cascadeInvalidate(r, m) {
-  if (r >= bracket.length) return;
-  const match = bracket[r][m];
-  match.s1 = ''; match.s2 = ''; match.winner = null;
-  // clear the slot in next round
-  const nextR = r + 1;
-  if (nextR >= bracket.length) return;
-  const nextM = Math.floor(m / 2);
-  const slot  = (m % 2 === 0) ? 't1' : 't2';
-  bracket[nextR][nextM][slot] = null;
-  cascadeInvalidate(nextR, nextM);
-}
-
-/* ════════════════════════════════════════════════════
-   SCORE INPUT HANDLER
-════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   SCORE HANDLER
+═══════════════════════════════════════════════════ */
 function onScore(r, m, side, val) {
   const match = bracket[r][m];
-  const key   = side === 1 ? 's1' : 's2';
-  match[key]  = val === '' ? '' : parseInt(val)||0;
+  const key = side===1 ? 's1' : 's2';
+  match[key] = val==='' ? '' : (parseInt(val)||0);
 
-  const s1 = match.s1 === '' ? null : Number(match.s1);
-  const s2 = match.s2 === '' ? null : Number(match.s2);
+  const s1 = match.s1==='' ? null : +match.s1;
+  const s2 = match.s2==='' ? null : +match.s2;
+  const prev = match.winner;
 
-  const oldWinner = match.winner;
   match.winner = null;
-
-  if (s1 !== null && s2 !== null) {
-    if (s1 > s2) match.winner = 1;
-    else if (s2 > s1) match.winner = 2;
-    // tie = no winner
+  if(s1!==null && s2!==null){
+    if(s1>s2) match.winner=1;
+    else if(s2>s1) match.winner=2;
   }
 
-  if (match.winner !== oldWinner) {
-    // Cascade: clear everything downstream first
-    const nextR = r + 1;
-    if (nextR < bracket.length) {
-      cascadeInvalidate(nextR, Math.floor(m/2));
-    }
-    // Then advance if we have a winner
-    if (match.winner) {
-      advance(r, m);
-      flashMatch(r+1, Math.floor(m/2));
-      const wName = match.winner===1 ? match.t1 : match.t2;
-      toast(`✅ ${wName} lanjut ke ronde berikutnya`);
-      // check champion
-      if (r === bracket.length - 1) toast(`🏆 JUARA: ${wName}!`);
+  if(match.winner !== prev) {
+    const nextR = r+1;
+    if(nextR < bracket.length) cascadeFrom(nextR, Math.floor(m/2));
+    if(match.winner) {
+      doAdvance(r,m);
+      // After advancing, check if the receiving match now has a lone team (auto-BYE)
+      if(nextR < bracket.length) checkAndAutoAdvance(nextR, Math.floor(m/2));
+      const wn = match.winner===1 ? match.t1 : match.t2;
+      toast(`✅ ${wn} lanjut ke ronde berikutnya`);
+      flashMatch(nextR, Math.floor(m/2));
     }
   }
-
-  save();
-  render();
-  setTimeout(drawLines, 30);
+  save(); render(); setTimeout(drawLines,30);
 }
 
-/* ════════════════════════════════════════════════════
-   TEAM NAME EDIT
-════════════════════════════════════════════════════ */
-function onNameEdit(r, m, side, val) {
-  const match = bracket[r][m];
-  const key   = side === 1 ? 't1' : 't2';
-  const old   = match[key];
-  match[key]  = val;
-  // propagate name change downstream
-  if (old) propagateName(old, val);
-  teams = teams.map(t => t === old ? val : t);
-  save();
-}
-
-function propagateName(oldName, newName) {
-  bracket.forEach(round => round.forEach(m => {
-    if (m.t1 === oldName) m.t1 = newName;
-    if (m.t2 === oldName) m.t2 = newName;
+/* ═══════════════════════════════════════════════════
+   NAME EDIT
+═══════════════════════════════════════════════════ */
+function onNameEdit(r, m, side, newVal) {
+  const key = side===1 ? 't1' : 't2';
+  const old = bracket[r][m][key];
+  if(!old || !newVal || newVal===old) return;
+  bracket.forEach(round => round.forEach(mx => {
+    if(mx.t1===old) mx.t1=newVal;
+    if(mx.t2===old) mx.t2=newVal;
   }));
+  teamNames = teamNames.map(t => t===old ? newVal : t);
+  save();
 }
 
-/* ════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════════ */
+function resetScores() {
+  if(!confirm('Reset semua skor? Nama tim tetap.')) return;
+  bracket.forEach((round,r) => {
+    round.forEach((m,i) => {
+      m.s1=''; m.s2='';
+      if(r===0){
+        if(m.t1&&!m.t2)      m.winner=1;
+        else if(!m.t1&&m.t2) m.winner=2;
+        else                 m.winner=null;
+      } else {
+        m.t1=null; m.t2=null; m.winner=null;
+      }
+    });
+  });
+  bracket[0].forEach((m,i) => { if(m.winner) doAdvance(0,i); });
+  // Re-cascade BYEs that may span multiple rounds
+  for(let r=1; r<bracket.length; r++){
+    bracket[r].forEach((_,i) => checkAndAutoAdvance(r,i));
+  }
+  save(); render(); setTimeout(drawLines,50);
+  toast('Skor direset ✓');
+}
+
+/* ═══════════════════════════════════════════════════
    RENDER
-════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════ */
+function roundLabel(r, total) {
+  const fe = total-1-r;
+  if(fe===0) return 'Final';
+  if(fe===1) return 'Semifinal';
+  if(fe===2) return 'Quarterfinal';
+  const size = Math.pow(2, fe+1);
+  return `Round of ${size}`;
+}
+
+function showApp() {
+  hide('scr-login'); hide('scr-setup');
+  document.getElementById('app').style.display = 'flex';
+  updateHeader();
+  render();
+  setTimeout(drawLines, 60);
+}
+
+function updateHeader() {
+  const n    = teamNames.length;
+  const byes = nextPow2(n) - n;
+  document.getElementById('hdr-info').innerHTML =
+    `<strong>${n}</strong> tim &nbsp;·&nbsp; ${bracket.length} ronde` +
+    (byes>0 ? ` &nbsp;·&nbsp; ${byes} BYE` : '');
+
+  const btns = document.getElementById('hdr-btns');
+  btns.innerHTML = '';
+
+  const badge = document.createElement('div');
+  badge.className = 'mode-badge ' + (isAdmin ? 'badge-admin' : 'badge-view');
+  badge.textContent = isAdmin ? '🔑 Admin' : '👁 Viewer';
+  btns.appendChild(badge);
+
+  if(isAdmin) {
+    const bEdit = document.createElement('button');
+    bEdit.className = 'hbtn hbtn-dim';
+    bEdit.textContent = '✎ Edit Tim';
+    bEdit.onclick = showSetup;
+    btns.appendChild(bEdit);
+
+    const bReset = document.createElement('button');
+    bReset.className = 'hbtn hbtn-red';
+    bReset.textContent = '↺ Reset Skor';
+    bReset.onclick = resetScores;
+    btns.appendChild(bReset);
+  }
+
+  const bLogout = document.createElement('button');
+  bLogout.className = 'hbtn hbtn-dim';
+  bLogout.textContent = isAdmin ? '🚪 Logout' : '← Kembali';
+  bLogout.onclick = logout;
+  btns.appendChild(bLogout);
+}
+
 function render() {
   const el = document.getElementById('bracket');
   el.innerHTML = '';
-
-  const totalRounds = bracket.length;
+  const totalR = bracket.length;
 
   bracket.forEach((round, r) => {
-    // ─ Round column ─
     const col = document.createElement('div');
-    col.className = 'round';
-    col.id = `round-${r}`;
+    col.className = 'round'; col.id = `R${r}`;
 
     const lbl = document.createElement('div');
-    lbl.className = 'round-label' + (r===totalRounds-1?' lbl-final':'');
-    lbl.textContent = ROUND_LABELS[r] || `Round ${r+1}`;
+    lbl.className = 'rlbl' + (r===totalR-1?' final':'');
+    lbl.textContent = roundLabel(r, totalR);
     col.appendChild(lbl);
 
-    const matchesDiv = document.createElement('div');
-    matchesDiv.className = 'matches';
-
-    // vertical spacing: matches in round r are spaced out so they
-    // align with the center of their two "feeder" matches in round r-1
-    // spacing formula: sep = (2^r - 1) * (CH + unit_sep) where unit_sep is base sep in r0
-    const BASE_SEP = 10; // px between adjacent matches in round 0
-    const CH = 72;       // card height
+    const ms = document.createElement('div');
+    ms.className = 'matches';
 
     round.forEach((match, m) => {
-      if (m > 0) {
+      if(m > 0) {
         const sep = document.createElement('div');
         sep.className = 'msep';
-        // r=0: BASE_SEP, r=1: BASE_SEP + CH + BASE_SEP, etc.
-        const sepH = r === 0
-          ? BASE_SEP
-          : (Math.pow(2, r) - 1) * (CH + BASE_SEP) + BASE_SEP;
-        sep.style.height = sepH + 'px';
-        matchesDiv.appendChild(sep);
+        // Gap grows per round so each match centers on its two feeders
+        sep.style.height = (r===0 ? BASE_SEP : (Math.pow(2,r)-1)*(CH+BASE_SEP)+BASE_SEP) + 'px';
+        ms.appendChild(sep);
       }
-      matchesDiv.appendChild(buildCard(match, r, m));
+      ms.appendChild(buildCard(match, r, m));
     });
 
-    col.appendChild(matchesDiv);
+    col.appendChild(ms);
     el.appendChild(col);
 
-    // ─ Horizontal gap + connector space ─
-    if (r < totalRounds - 1) {
+    if(r < totalR-1) {
       const gap = document.createElement('div');
       gap.className = 'hgap';
-      gap.id = `hgap-${r}`;
       el.appendChild(gap);
     }
   });
 
-  // ─ Champion column ─
-  const champCol = document.createElement('div');
-  champCol.className = 'round';
+  // Champion gap + column
+  const cg = document.createElement('div');
+  cg.className = 'hgap';
+  el.appendChild(cg);
 
-  const champLbl = document.createElement('div');
-  champLbl.className = 'round-label lbl-champ';
-  champLbl.textContent = '🏆 JUARA';
-  champCol.appendChild(champLbl);
+  const cc = document.createElement('div');
+  cc.className = 'round';
+  const cl = document.createElement('div');
+  cl.className = 'rlbl champ'; cl.textContent = '🏆 JUARA';
+  cc.appendChild(cl);
 
-  // Get champion from last round
-  const finalMatch = bracket[bracket.length-1][0];
-  const champName = finalMatch?.winner
-    ? (finalMatch.winner===1 ? finalMatch.t1 : finalMatch.t2)
-    : null;
-
-  const champBox = document.createElement('div');
-  champBox.className = 'champ-box';
-  champBox.innerHTML = `
-    <div class="champ-crown">👑</div>
-    <div class="champ-lbl">WINNER</div>
-    <div class="champ-name">${champName || ''}</div>
-    <div class="champ-sub">MLBB · SJL S2</div>
-  `;
-  champCol.appendChild(champBox);
-
-  // add left connector gap
-  const champGap = document.createElement('div');
-  champGap.className = 'hgap';
-  champGap.id = `hgap-${bracket.length-1}`;
-  el.appendChild(champGap);
-  el.appendChild(champCol);
+  const fin = bracket[totalR-1][0];
+  const champName = fin?.winner ? (fin.winner===1?fin.t1:fin.t2) : null;
+  const box = document.createElement('div');
+  box.className = 'cbox';
+  box.innerHTML = `
+    <div class="ccrown">👑</div>
+    <div class="clbl">WINNER</div>
+    <div class="cname">${champName||''}</div>
+    <div class="csub">MLBB · SJL S2</div>`;
+  cc.appendChild(box);
+  el.appendChild(cc);
 }
 
-/* ── Build a single match card ── */
 function buildCard(match, r, m) {
   const card = document.createElement('div');
-  card.className = 'match' + (match.winner ? ' has-winner' : '');
-  card.id = `match-${r}-${m}`;
+  card.className = 'match' + (match.winner?' hw':'');
+  card.id = `M${r}_${m}`;
 
-  [1, 2].forEach(side => {
-    const isT1 = side === 1;
-    const tKey = isT1 ? 't1' : 't2';
-    const sKey = isT1 ? 's1' : 's2';
-    const name  = match[tKey];
-    const score = match[sKey];
-    const isBye = name === null;
-    const isWin = match.winner === side;
-    const isLos = match.winner && match.winner !== side;
+  [1,2].forEach(side => {
+    const isT1  = side===1;
+    const t     = isT1 ? match.t1 : match.t2;
+    const s     = isT1 ? match.s1 : match.s2;
+    const isBye = t===null && r===0;
+    const isTBD = t===null && r>0 && !match.isBye;
+    const isMidBye = match.isBye && r>0; // lone team auto-advancing mid-bracket
+    const isWin = match.winner===side;
+    const isLos = !!match.winner && match.winner!==side;
 
-    if (!isT1) {
-      const div = document.createElement('div');
-      div.style.cssText='height:1px;background:rgba(255,255,255,.05)';
-      card.appendChild(div);
+    if(!isT1) {
+      const d = document.createElement('div');
+      d.style.cssText='height:1px;background:rgba(255,255,255,.04)';
+      card.appendChild(d);
     }
 
     const row = document.createElement('div');
-    row.className = 'trow' + (isWin?' t-win':isLos?' t-lose':isBye?' t-bye':'');
+    row.className = 'trow'+(isWin?' tw':isLos?' tl':(isBye||(!t&&isMidBye))?' tb':'');
 
-    // seed
-    const seed = document.createElement('div');
-    seed.className = 'tseed';
-    seed.textContent = isBye ? '—' : (m * 2 + side);
-    row.appendChild(seed);
+    // Seed
+    const sd = document.createElement('div');
+    sd.className = 'tseed';
+    sd.textContent = (isBye||isTBD||(!t&&isMidBye)) ? '—' : (m*2+side);
+    row.appendChild(sd);
 
-    // name
-    const nameIn = document.createElement('input');
-    nameIn.type = 'text';
-    nameIn.className = 'tname' + (isWin?' w':isBye?' bye':'');
-    nameIn.value = isBye ? 'BYE' : (name || 'TBD');
-    nameIn.readOnly = isBye || !name;
-    nameIn.maxLength = 20;
-    nameIn.spellcheck = false;
-    if (!isBye && name) {
-      nameIn.addEventListener('blur', e => {
-        const v = e.target.value.trim();
-        if (v && v !== name) {
-          onNameEdit(r, m, side, v);
-          render();
-          setTimeout(drawLines, 30);
-        }
+    // Name
+    const ni = document.createElement('input');
+    ni.type='text'; ni.maxLength=24; ni.spellcheck=false;
+    // Determine display value
+    const noOpponent = isMidBye && !t; // the empty slot in a mid-round BYE match
+    ni.className = 'tname' + (isWin?' ew':(isBye||isTBD||noOpponent)?' dim':'');
+    if(isBye)         ni.value='BYE';
+    else if(noOpponent) ni.value='BYE';
+    else if(isTBD)    ni.value='TBD';
+    else              ni.value=t||'';
+
+    if(isAdmin && !isBye && !isTBD && !noOpponent && t) {
+      ni.classList.add('editable');
+      ni.addEventListener('blur', e => {
+        const v=e.target.value.trim();
+        if(v){ onNameEdit(r,m,side,v); render(); setTimeout(drawLines,30); }
       });
-      nameIn.addEventListener('keydown', e => { if(e.key==='Enter') nameIn.blur(); });
+      ni.addEventListener('keydown', e => { if(e.key==='Enter') ni.blur(); });
+    } else {
+      ni.readOnly = true;
     }
-    row.appendChild(nameIn);
+    row.appendChild(ni);
 
-    // score
-    const scoreIn = document.createElement('input');
-    scoreIn.type = 'number';
-    scoreIn.min = '0'; scoreIn.max = '99';
-    scoreIn.className = 'tscore' + (isWin?' sw':isLos?' sl':'');
-    scoreIn.value = (isBye || !name) ? '' : (score === '' ? '' : score);
-    scoreIn.disabled = isBye || !name;
-    scoreIn.placeholder = (isBye || !name) ? '' : '—';
-    if (!isBye && name) {
-      scoreIn.addEventListener('input', e => onScore(r, m, side, e.target.value));
+    // Score
+    const si = document.createElement('input');
+    si.type='number'; si.min='0'; si.max='99';
+    si.className = 'tscore'+(isWin?' sw':isLos?' sl':'');
+    const noScore = isBye||isTBD||noOpponent||isMidBye; // mid-BYE match = no score needed
+    si.value = (!noScore && s!=='') ? s : '';
+    si.placeholder = noScore ? '' : '—';
+
+    if(isAdmin && !noScore && t) {
+      si.classList.add('editable');
+      si.addEventListener('input', e => onScore(r,m,side,e.target.value));
+    } else {
+      si.readOnly = true;
     }
-    row.appendChild(scoreIn);
-
+    row.appendChild(si);
     card.appendChild(row);
   });
 
   return card;
 }
 
-/* ════════════════════════════════════════════════════
-   DRAW SVG CONNECTOR LINES
-════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   SVG LINES  — draw exact bracket connector lines
+   Strategy: for each match, draw a horizontal stub from
+   its right edge to the midpoint column. Then connect
+   the two stubs of a sibling pair with a vertical line.
+   The midpoint then runs horizontally to the next match.
+═══════════════════════════════════════════════════ */
 function drawLines() {
-  const stage  = document.getElementById('stage');
-  const svgEl  = document.getElementById('svg-layer');
+  const svgEl = document.getElementById('svg-layer');
   svgEl.innerHTML = '';
-
-  // size svg to bracket content
   const bkt = document.getElementById('bracket');
-  svgEl.setAttribute('width',  bkt.scrollWidth);
-  svgEl.setAttribute('height', bkt.scrollHeight);
-  svgEl.style.width  = bkt.scrollWidth  + 'px';
-  svgEl.style.height = bkt.scrollHeight + 'px';
+  if(!bkt) return;
 
-  const bRect = bkt.getBoundingClientRect();
+  // Use the bracket's own coordinate space (no scroll offset issues)
+  const W = bkt.scrollWidth, H = bkt.scrollHeight;
+  svgEl.setAttribute('width', W); svgEl.setAttribute('height', H);
+  svgEl.style.width = W+'px'; svgEl.style.height = H+'px';
+
+  const bR = bkt.getBoundingClientRect();
 
   bracket.forEach((round, r) => {
-    const nextRound = bracket[r+1];
-    if (!nextRound) return;
+    if(r >= bracket.length-1) return;
 
-    round.forEach((match, m) => {
-      const nextM = Math.floor(m / 2);
-      const fromEl = document.getElementById(`match-${r}-${m}`);
-      const toEl   = document.getElementById(`match-${r+1}-${nextM}`);
-      if (!fromEl || !toEl) return;
+    // Process pairs: every 2 matches in round r feed 1 match in round r+1
+    for(let base=0; base<round.length; base+=2) {
+      const mA = round[base];
+      const mB = round[base+1];           // may be undefined (odd count)
+      const nextM = Math.floor(base/2);
+      const elA = document.getElementById(`M${r}_${base}`);
+      const elB = mB ? document.getElementById(`M${r}_${base+1}`) : null;
+      const elN = document.getElementById(`M${r+1}_${nextM}`);
+      if(!elA || !elN) continue;
 
-      const fR = fromEl.getBoundingClientRect();
-      const tR = toEl.getBoundingClientRect();
+      const rA = elA.getBoundingClientRect();
+      const rN = elN.getBoundingClientRect();
 
-      // positions relative to bracket div
-      const ox = fR.right  - bRect.left;
-      const oy = fR.top + fR.height/2 - bRect.top;
-      const ix = tR.left   - bRect.left;
-      const iy = tR.top + tR.height/2 - bRect.top;
+      const xOut  = rA.right  - bR.left;          // right edge of match A (and B)
+      const yA    = rA.top + rA.height/2 - bR.top; // mid-Y of match A
+      const xIn   = rN.left   - bR.left;            // left edge of next match
+      const yN    = rN.top + rN.height/2 - bR.top;  // mid-Y of next match
+      const xMid  = (xOut + xIn) / 2;               // midpoint X
 
-      const hasWinner = !!match.winner;
-      const color  = hasWinner ? 'rgba(0,207,255,0.7)' : 'rgba(91,43,232,0.35)';
-      const width  = hasWinner ? 1.5 : 1;
+      const hwA = !!mA.winner;
+      const hwB = mB ? !!mB.winner : false;
+      const colA = hwA ? '#00cfff' : 'rgba(91,43,232,.35)';
+      const swA  = hwA ? 1.5 : 1;
 
-      // mid X for the elbow
-      const mx = ox + (ix - ox) / 2;
+      if(elB) {
+        const rB = elB.getBoundingClientRect();
+        const yB = rB.top + rB.height/2 - bR.top;
+        const colB = hwB ? '#00cfff' : 'rgba(91,43,232,.35)';
+        const swB  = hwB ? 1.5 : 1;
 
-      // Draw: horizontal from match → midX, vertical midX, horizontal to next match
-      // For pair (0,1) → mid, the vertical connects oy of match[m*2] to oy of match[m*2+1]
-      // We only draw the vertical on the even index (first of the pair)
-      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-      let d;
-      if (m % 2 === 0) {
-        // top of pair — draw H + V + nothing (V will be drawn with sibling)
-        const sibEl = document.getElementById(`match-${r}-${m+1}`);
-        if (sibEl) {
-          const sR = sibEl.getBoundingClientRect();
-          const sy = sR.top + sR.height/2 - bRect.top;
-          // H from this match to midX, V from oy to sy, H from midX to next
-          d = `M ${ox},${oy} H ${mx} V ${sy} M ${mx},${oy} H ${ix}`;
-
-          // Also draw sib horizontal
-          const sibPath = document.createElementNS('http://www.w3.org/2000/svg','path');
-          const sibHasW = !!bracket[r][m+1]?.winner;
-          const sibColor = sibHasW ? 'rgba(0,207,255,0.7)' : 'rgba(91,43,232,0.35)';
-          sibPath.setAttribute('d', `M ${ox},${sy} H ${mx}`);
-          sibPath.setAttribute('fill','none');
-          sibPath.setAttribute('stroke', sibColor);
-          sibPath.setAttribute('stroke-width', sibHasW?1.5:1);
-          sibPath.setAttribute('stroke-linecap','round');
-          svgEl.appendChild(sibPath);
-        } else {
-          d = `M ${ox},${oy} H ${mx} V ${iy} H ${ix}`;
+        // Stub from A to mid
+        line(svgEl, xOut, yA, xMid, yA, colA, swA);
+        // Stub from B to mid
+        line(svgEl, xOut, yB, xMid, yB, colB, swB);
+        // Vertical spine connecting yA↔yB at xMid
+        const spineCol = (hwA && hwB) ? '#00cfff' : 'rgba(91,43,232,.35)';
+        const spineSw  = (hwA || hwB) ? 1.5 : 1;
+        line(svgEl, xMid, yA, xMid, yB, spineCol, spineSw);
+        // Horizontal from spine midpoint to next match
+        const ySpineMid = (yA+yB)/2;
+        const outCol = (hwA||hwB) ? '#00cfff' : 'rgba(91,43,232,.35)';
+        line(svgEl, xMid, ySpineMid, xIn, yN, outCol, spineSw);
+        // Small vertical correction if ySpineMid !== yN
+        if(Math.abs(ySpineMid-yN) > 1) {
+          line(svgEl, xMid, ySpineMid, xMid, yN, outCol, spineSw);
+          line(svgEl, xMid, yN, xIn, yN, outCol, spineSw);
         }
       } else {
-        // bottom of pair — only draw H to midX (vertical already drawn by sibling above)
-        d = `M ${mx},${oy} H ${ix}`;
+        // Odd match — single connector, straight line
+        line(svgEl, xOut, yA, xIn, yN, colA, swA);
       }
-
-      path.setAttribute('d', d);
-      path.setAttribute('fill','none');
-      path.setAttribute('stroke', color);
-      path.setAttribute('stroke-width', width);
-      path.setAttribute('stroke-linecap','round');
-      svgEl.appendChild(path);
-    });
+    }
   });
 
-  // connector from Final to Champion box
-  const finalEl = document.getElementById(`match-${bracket.length-1}-0`);
-  const champEl = document.querySelector('.champ-box');
-  if (finalEl && champEl) {
-    const fR = finalEl.getBoundingClientRect();
+  // Final → Champion
+  const finEl   = document.getElementById(`M${bracket.length-1}_0`);
+  const champEl = document.querySelector('.cbox');
+  if(finEl && champEl) {
+    const fR = finEl.getBoundingClientRect();
     const cR = champEl.getBoundingClientRect();
-    const ox = fR.right  - bRect.left;
-    const oy = fR.top + fR.height/2 - bRect.top;
-    const ix = cR.left   - bRect.left;
-    const iy = cR.top + cR.height/2 - bRect.top;
-    const finalMatch = bracket[bracket.length-1][0];
-    const hasWin = !!finalMatch?.winner;
-    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    p.setAttribute('d', `M ${ox},${oy} H ${ix}`);
-    p.setAttribute('fill','none');
-    p.setAttribute('stroke', hasWin ? 'rgba(245,196,0,0.8)' : 'rgba(91,43,232,0.35)');
-    p.setAttribute('stroke-width', hasWin ? 2 : 1);
-    p.setAttribute('stroke-dasharray', hasWin ? '' : '4 4');
-    p.setAttribute('stroke-linecap','round');
-    svgEl.appendChild(p);
+    const ox = fR.right - bR.left,  oy = fR.top+fR.height/2-bR.top;
+    const ix = cR.left  - bR.left,  iy = cR.top+cR.height/2-bR.top;
+    const fin = bracket[bracket.length-1][0];
+    const hw  = !!fin?.winner;
+    line(svgEl, ox, oy, ix, iy,
+      hw ? '#f5c400' : 'rgba(91,43,232,.35)',
+      hw ? 2 : 1,
+      hw ? '' : '5 4');
   }
 }
 
-/* ════════════════════════════════════════════════════
-   FLASH ANIMATION
-════════════════════════════════════════════════════ */
-function flashMatch(r, m) {
-  setTimeout(() => {
-    const el = document.getElementById(`match-${r}-${m}`);
-    if (!el) return;
+function line(svg, x1, y1, x2, y2, stroke, sw, dash) {
+  const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',x1); l.setAttribute('y1',y1);
+  l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+  l.setAttribute('stroke',stroke); l.setAttribute('stroke-width',sw);
+  l.setAttribute('stroke-linecap','round');
+  if(dash) l.setAttribute('stroke-dasharray',dash);
+  svg.appendChild(l);
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════ */
+function flashMatch(r,m) {
+  setTimeout(()=>{
+    const el=document.getElementById(`M${r}_${m}`);
+    if(!el) return;
     el.classList.add('wflash');
-    setTimeout(() => el.classList.remove('wflash'), 800);
-  }, 80);
+    setTimeout(()=>el.classList.remove('wflash'),700);
+  },80);
 }
 
-/* ════════════════════════════════════════════════════
-   RESET / GENERATE
-════════════════════════════════════════════════════ */
-function resetBracket() {
-  if (!confirm('Reset semua skor? Nama tim tetap ada.')) return;
-  // Preserve team names from round 0
-  const r0teams = bracket[0].flatMap(m => [m.t1, m.t2]).filter(Boolean);
-  initBracket(r0teams.length >= TEAMS_DEFAULT.length ? r0teams : teams);
-  save(); render(); setTimeout(drawLines,50);
-  toast('Skor direset ✓');
-}
-
-function generateNew() {
-  if (!confirm('Generate ulang bracket dengan nama tim default?')) return;
-  initBracket(TEAMS_DEFAULT.slice());
-  save(); render(); setTimeout(drawLines,50);
-  toast('Bracket baru dibuat ✓');
-}
-
-/* ════════════════════════════════════════════════════
-   STORAGE
-════════════════════════════════════════════════════ */
-function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({bracket, teams})); } catch(e){}
-}
-function tryLoad() {
-  try {
-    const s = localStorage.getItem(STORAGE_KEY);
-    return s ? JSON.parse(s) : null;
-  } catch(e){ return null; }
-}
-
-/* ════════════════════════════════════════════════════
-   TOAST
-════════════════════════════════════════════════════ */
 let toastT;
 function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
   clearTimeout(toastT);
-  toastT = setTimeout(() => el.classList.remove('show'), 3000);
+  toastT=setTimeout(()=>el.classList.remove('show'),3000);
 }
+
+function save() {
+  try{
+    const json = JSON.stringify({teams:teamNames,bracket});
+    const b64  = btoa(unescape(encodeURIComponent(json)));
+    localStorage.setItem(STORAGE_KEY, b64);
+  }catch(e){}
+}
+function tryLoad() {
+  try{
+    const b64 = localStorage.getItem(STORAGE_KEY);
+    if(!b64) return null;
+    const json = decodeURIComponent(escape(atob(b64)));
+    const d    = JSON.parse(json);
+    return (d.bracket&&d.teams&&d.teams.length>=2) ? d : null;
+  }catch(e){ return null; }
+}
+
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); document.getElementById(id).style.display=''; }
+
+// Override hide/show for app div which uses display:flex
+const _hide = hide;
+hide = function(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.add('hidden');
+  if(id==='app') el.style.display='none';
+};
+show = function(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.remove('hidden');
+};
+
+window.addEventListener('resize',()=>{
+  clearTimeout(window._rt);
+  window._rt=setTimeout(drawLines,80);
+});
+
+// Observe bracket mutations to redraw lines
+const observer = new MutationObserver(()=>setTimeout(drawLines,20));
+observer.observe(document.getElementById('bracket'), {childList:true,subtree:true});
 </script>
 </body>
 </html>
